@@ -3,6 +3,7 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.datasets import mnist
+from tensorflow.keras.utils import to_categorical
 
 def load_and_prepare_for_svm():
     """
@@ -49,20 +50,17 @@ def load_and_prepare_for_svm():
     
     return X_train_svm, y_train_svm, X_test_svm, y_test_svm
 
-# ----------------------------------------------------------------------
-# (Tùy chọn) Thêm hàm cho CNN vào đây để hoàn chỉnh data_loader.py
+
+# Data loader cho model cnn
 def load_and_prepare_for_cnn():
-    """
-    Tải và tiền xử lý dữ liệu MNIST sẵn sàng cho mô hình CNN.
+    (X_train, y_train), (X_test, y_test) = mnist.load_data()
     
-    Các bước tiền xử lý:
-    1. Chuẩn hóa pixel về phạm vi [0.0, 1.0].
-    2. Định hình lại (Reshape) thành (số mẫu, 28, 28, 1).
-    3. Mã hóa nhãn (One-Hot Encoding).
+    # 1. Reshape về (28, 28, 1) và chuẩn hóa
+    X_train_cnn = X_train.reshape((-1, 28, 28, 1)).astype('float32') / 255.0
+    X_test_cnn = X_test.reshape((-1, 28, 28, 1)).astype('float32') / 255.0
     
-    Returns:
-        tuple: (X_train_cnn, y_train_cnn, X_test_cnn, y_test_cnn)
-    """
-    # ... (code tiền xử lý CNN) ...
-    pass 
-# ----------------------------------------------------------------------
+    # 2. One-hot encoding cho nhãn
+    y_train_cnn = to_categorical(y_train, 10)
+    y_test_cnn = to_categorical(y_test, 10)
+    
+    return X_train_cnn, y_train_cnn, X_test_cnn, y_test_cnn

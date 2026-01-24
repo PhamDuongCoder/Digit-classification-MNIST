@@ -6,7 +6,7 @@ import joblib
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
-MODEL_FILENAME = 'results/svm_model.joblib'
+MODEL_FILENAME = 'Results/svm_model.joblib'
 
 def train_svm(X_train, y_train, max_samples=None):
     """
@@ -26,7 +26,7 @@ def train_svm(X_train, y_train, max_samples=None):
     y_train_data = y_train
     
     if max_samples is not None and max_samples < len(X_train):
-        print(f"⚠️ Chỉ sử dụng {max_samples} mẫu đầu tiên để thử nghiệm nhanh.")
+        print(f"Sử dụng {max_samples} mẫu đầu tiên để thử nghiệm nhanh.")
         X_train_data = X_train[:max_samples]
         y_train_data = y_train[:max_samples]
         
@@ -35,27 +35,27 @@ def train_svm(X_train, y_train, max_samples=None):
     start_time = time.time()
     
     # Thiết lập mô hình SVM:
-    # kernel='rbf' (Radial Basis Function) thường là lựa chọn tốt nhất cho dữ liệu ảnh.
-    # C=1.0 và gamma='scale' là các giá trị mặc định/khởi tạo tốt.
+    # kernel='rbf' thường là kernel tốt nhất cho dữ liệu ảnh.
+    # C=1.0 và gamma='scale' là các giá trị khởi tạo tốt.
     svm_model = SVC(kernel='rbf', C=1.0, gamma='scale', random_state=42)
     
     # Huấn luyện mô hình
     svm_model.fit(X_train_data, y_train_data)
     
     end_time = time.time()
-    print(f"✅ Huấn luyện SVM hoàn tất trong {end_time - start_time:.2f} giây.")
+    print(f"Huấn luyện SVM hoàn tất trong {end_time - start_time:.2f} giây.")
     
     return svm_model
 
 def save_model(model, filename):
     """Lưu mô hình đã huấn luyện vào đĩa."""
     joblib.dump(model, filename)
-    print(f"✅ Mô hình SVM đã được lưu tại: {filename}")
+    print(f"Mô hình SVM đã được lưu tại: {filename}")
 
 def load_model(filename):
     """Tải mô hình đã lưu từ đĩa."""
     model = joblib.load(filename)
-    print(f"✅ Mô hình SVM đã được tải từ: {filename}")
+    print(f"Mô hình SVM đã được tải từ: {filename}")
     return model
 
 def evaluate_svm(model, X_test, y_test):
@@ -77,12 +77,12 @@ def evaluate_svm(model, X_test, y_test):
     
     # Tính toán độ chính xác
     accuracy = accuracy_score(y_test, y_pred)
-    print(f"\n✨ Độ chính xác của SVM: {accuracy * 100:.4f}%")
+    print(f"\nĐộ chính xác của SVM: {accuracy * 100:.4f}%")
     
-    # In Ma trận Nhầm lẫn và Báo cáo Phân loại
+    # In ma trận nhầm lẫn và báo cáo phân loại
     print("\n--- Ma trận Nhầm lẫn (Confusion Matrix) ---")
     cm = confusion_matrix(y_test, y_pred)
-    # Hiển thị Ma trận dưới dạng DataFrame để dễ đọc hơn
+    # Hiển thị ma trận dưới dạng DataFrame để dễ đọc hơn
     cm_df = pd.DataFrame(cm, index=[i for i in range(10)], columns=[i for i in range(10)])
     print(cm_df)
     

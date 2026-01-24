@@ -1,0 +1,2 @@
+neural network: https://i2tutorials.com/hidden-layers-in-neural-networks/
+svm: https://fity.club/lists/suggestions/support-vector-machines/

@@ -1,0 +1,252 @@
+\documentclass[../DoAn.tex]{subfiles}
+
+
+
+\begin{document}
+
+\section{Thực nghiệm với mô hình SVM}
+
+Trong phần này, chúng ta sẽ đi sâu vào quá trình triển khai mô hình SVM để phân loại bộ dữ liệu MNIST, từ khâu xử lý dữ liệu thô đến việc thiết lập cấu hình huấn luyện tối ưu.
+
+\subsection{Tiền xử lý dữ liệu (Preprocessing)}
+
+Dữ liệu hình ảnh từ bộ MNIST cần được đưa về định dạng phù hợp trước khi đưa vào mô hình SVM. Quy trình thực hiện gồm các bước chính sau:
+
+\begin{itemize}
+    \item \textbf{Chuẩn hóa (Normalization):} Các giá trị pixel trong ảnh gốc nằm trong khoảng $[0, 255]$. Chúng ta thực hiện chuẩn hóa về đoạn $[0.0, 1.0]$ bằng công thức:
+    \begin{equation}
+        X_{norm} = \frac{X_{raw}}{255.0}
+    \end{equation}
+    Việc chuẩn hóa giúp các giá trị đặc trưng có cùng quy mô, hỗ trợ hàm Kernel RBF tính toán khoảng cách chính xác hơn và tăng tốc độ hội tụ của thuật toán.
+    
+    \item \textbf{Làm phẳng dữ liệu (Flattening):} SVM yêu cầu đầu vào là các vector đặc trưng một chiều. Do đó, mỗi ma trận ảnh kích thước $28 \times 28$ được trải phẳng thành một vector có độ dài $784$:
+    \begin{equation}
+        X \in \mathbb{R}^{28 \times 28} \xrightarrow{\text{Flatten}} X' \in \mathbb{R}^{784}
+    \end{equation}
+    
+    \item \textbf{Quản lý nhãn:} Nhãn dữ liệu được giữ nguyên dưới dạng số nguyên từ $0$ đến $9$ để phục vụ cho chiến lược phân loại đa lớp.
+\end{itemize}
+
+Trong quá trình thực nghiệm, do SVM có độ phức tạp tính toán khá cao ($O(N^2 \cdot d)$ đến $O(N^3 \cdot d)$), mô hình được thiết kế để có thể huấn luyện trên một tập con (\textit{subset}) dữ liệu nếu cần thiết, nhằm tối ưu hóa thời gian thử nghiệm trước khi áp dụng trên toàn bộ các mẫu.
+
+\subsection{SVM trong phân loại đa lớp}
+
+Về bản chất toán học, thuật toán SVM được thiết kế để giải quyết bài toán phân loại nhị phân (Binary Classification) — tức là chỉ phân biệt giữa hai lớp dữ liệu dựa trên một siêu phẳng tối ưu. Tuy nhiên, bộ dữ liệu MNIST có 10 lớp chữ số từ $0$ đến $9$. Để giải quyết vấn đề này, thư viện \texttt{sklearn.svm.SVC} áp dụng chiến lược \textbf{One-vs-One (OvO)}.
+
+\paragraph{Cơ chế hoạt động của chiến lược One-vs-One:}
+Trong chiến lược OvO, thay vì xây dựng một bộ phân loại duy nhất cho 10 lớp, hệ thống sẽ xây dựng các bộ phân loại nhị phân cho từng cặp lớp có thể có. 
+
+Số lượng bộ phân loại nhị phân cần thiết được tính theo công thức tổ hợp:
+\begin{equation}
+    N_{classifiers} = \frac{k(k-1)}{2}
+\end{equation}
+Trong đó $k$ là số lượng lớp. Với bài toán MNIST ($k=10$), số lượng bộ phân loại được tạo ra là:
+\begin{equation}
+    N_{classifiers} = \frac{10(10-1)}{2} = 45 \text{ bộ phân loại nhị phân}
+\end{equation}
+
+Mỗi bộ phân loại nhị phân (ví dụ: bộ phân loại "Số 1 vs Số 2", "Số 4 vs Số 9",...) sẽ chỉ tập trung vào việc học cách phân biệt giữa hai chữ số cụ thể đó dựa trên tập dữ liệu tương ứng.
+
+\paragraph{Cách ra quyết định của AI (Cơ chế bỏ phiếu - Voting):}
+Khi một hình ảnh chữ số mới (vector $X'$) được đưa vào hệ thống để dự đoán, quá trình ra quyết định diễn ra như sau:
+
+\begin{enumerate}
+    \item \textbf{Dự đoán song song:} Hình ảnh này sẽ được đưa qua toàn bộ $45$ bộ phân loại nhị phân đã huấn luyện.
+    \item \textbf{Tích lũy phiếu bầu:} Mỗi bộ phân loại sẽ đưa ra một "phiếu bầu" cho lớp mà nó cho là đúng nhất. 
+    \begin{itemize}
+        \item Ví dụ: Bộ phân loại "3 vs 8" nhận định ảnh là số 3, thì lớp "3" sẽ được cộng thêm 1 điểm.
+    \end{itemize}
+    \item \textbf{Quyết định cuối cùng:} Lớp nào nhận được nhiều phiếu bầu nhất từ tổng số $45$ dự đoán sẽ được AI chọn làm nhãn dự đoán cuối cùng cho hình ảnh đó.
+\end{enumerate}
+
+\subsection{Triển khai (Implement)}
+
+\subsubsection{Sơ đồ cấu trúc thư mục (Project Structure)}
+
+Dự án phân loại chữ số MNIST sử dụng SVM được tổ chức theo cấu trúc thư mục sau để đảm bảo tính mô đun và dễ bảo trì:
+
+\begin{itemize}
+    \item \textbf{main.py:} File chính để chạy chương trình, chứa các hàm \texttt{run\_svm\_project()} và \texttt{run\_cnn\_project()} để thực thi các mô hình.
+    
+    \item \textbf{Data\_preparation/:} Thư mục chứa các module xử lý dữ liệu.
+    \begin{itemize}
+        \item \texttt{\_\_init\_\_.py:} File khởi tạo package.
+        \item \texttt{data\_loader.py:} Chứa các hàm tải và chuẩn bị dữ liệu cho SVM và CNN, bao gồm chuẩn hóa và làm phẳng dữ liệu.
+    \end{itemize}
+    
+    \item \textbf{Models/:} Thư mục chứa các module định nghĩa mô hình.
+    \begin{itemize}
+        \item \texttt{\_\_init\_\_.py:} File khởi tạo package.
+        \item \texttt{svm\_model.py:} Chứa các hàm huấn luyện, lưu, tải và đánh giá mô hình SVM.
+        \item \texttt{cnn\_model.py:} Chứa các hàm xây dựng, huấn luyện và đánh giá mô hình CNN.
+    \end{itemize}
+    
+    \item \textbf{Results/:} Thư mục lưu trữ kết quả và mô hình đã huấn luyện.
+    \begin{itemize}
+        \item \texttt{svm\_model.joblib:} Mô hình SVM đã được lưu.
+        \item \texttt{Result SVM.txt:} Kết quả đánh giá của mô hình SVM.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Quá trình huấn luyện AI}
+
+Quá trình huấn luyện mô hình SVM được thực hiện theo các bước chi tiết sau:
+
+\begin{enumerate}
+    \item \textbf{Tải và tiền xử lý dữ liệu:} \\Sử dụng hàm \texttt{load\_and\_prepare\_for\_svm()} từ module \texttt{Data\_preparation/data\_loader.py}. Dữ liệu MNIST được tải từ thư viện TensorFlow/Keras, bao gồm 60.000 mẫu huấn luyện và 10.000 mẫu kiểm tra. Các bước tiền xử lý bao gồm:
+    \begin{itemize}
+        \item Chuẩn hóa giá trị pixel từ khoảng [0, 255] về [0.0, 1.0] bằng cách chia cho 255.0.
+        \item Làm phẳng (flatten) mỗi ảnh 28×28 thành vector 784 chiều để phù hợp với đầu vào của SVM.
+        \item Giữ nguyên nhãn dưới dạng số nguyên từ 0 đến 9.
+    \end{itemize}
+    
+    \item \textbf{Huấn luyện mô hình:} \\Sử dụng hàm \texttt{train\_svm()} từ module \texttt{Models/svm\_model.py}. Mô hình SVM được cấu hình với:
+    \begin{itemize}
+        \item Kernel RBF (Radial Basis Function) - phù hợp cho dữ liệu không tuyến tính.
+        \item Tham số C = 1.0 (điều chỉnh độ phức tạp của mô hình).
+        \item Tham số gamma = 'scale' (tự động điều chỉnh dựa trên dữ liệu).
+        \item Random state = 42 để đảm bảo tính tái lập.
+    \end{itemize}
+    
+    \item \textbf{Lưu trữ mô hình:} \\Mô hình đã huấn luyện được lưu vào file \texttt{Results/svm\_model.joblib} bằng thư viện joblib để có thể tái sử dụng mà không cần huấn luyện lại.
+    
+\end{enumerate}
+
+\subsubsection{Giải thích các hàm quan trọng (Code Snippets)}
+
+Trong phần triển khai SVM, các hàm quan trọng được định nghĩa trong file \texttt{Models/svm\_model.py} và được sử dụng trong \texttt{main.py}. Dưới đây là giải thích chi tiết các hàm chính:
+
+\paragraph{Hàm \texttt{train\_svm(X\_train, y\_train, max\_samples=None)}:}
+Hàm này chịu trách nhiệm huấn luyện mô hình SVM với kernel RBF. Đầu vào là dữ liệu huấn luyện đã được làm phẳng và nhãn tương ứng. Tham số \texttt{max\_samples} cho phép giới hạn số lượng mẫu để thử nghiệm nhanh. Hàm sử dụng \texttt{SVC} từ thư viện scikit-learn với các tham số mặc định phù hợp cho dữ liệu ảnh.
+
+\paragraph{Hàm \texttt{save\_model(model, filename)} và \texttt{load\_model(filename)}:}
+Hai hàm này sử dụng thư viện \texttt{joblib} để lưu và tải mô hình SVM đã huấn luyện. Việc lưu trữ mô hình giúp tránh phải huấn luyện lại từ đầu, tiết kiệm thời gian trong các lần chạy sau.
+
+\paragraph{Hàm \texttt{evaluate\_svm(model, X\_test, y\_test)}:}
+Hàm đánh giá hiệu suất của mô hình trên tập kiểm tra. Nó tính toán độ chính xác, hiển thị ma trận nhầm lẫn và báo cáo phân loại chi tiết cho từng lớp. Điều này giúp phân tích các lỗi phổ biến trong quá trình phân loại.
+
+Trong \texttt{main.py}, hàm \texttt{run\_svm\_project()} tích hợp tất cả các bước: tải dữ liệu, huấn luyện, lưu mô hình và đánh giá. Quá trình này đảm bảo luồng xử lý hoàn chỉnh từ dữ liệu thô đến kết quả cuối cùng.
+
+\section{Thực nghiệm với mô hình CNN}
+
+Trong phần này, chúng ta sẽ khám phá việc áp dụng Mạng Nơ-ron Tích chập (CNN) để phân loại bộ dữ liệu MNIST. CNN tận dụng cấu trúc không gian của dữ liệu hình ảnh, mang lại hiệu suất vượt trội so với các phương pháp truyền thống như SVM.
+
+\subsection{Tiền xử lý dữ liệu (Preprocessing)}
+
+Dữ liệu hình ảnh MNIST cần được chuẩn bị phù hợp cho mạng CNN. Quy trình xử lý gồm các bước sau:
+
+\begin{itemize}
+    \item \textbf{Chuẩn hóa (Normalization):} Các giá trị pixel từ $[0, 255]$ được chuẩn hóa về $[0.0, 1.0]$ bằng công thức:
+    \begin{equation}
+        X_{norm} = \frac{X_{raw}}{255.0}
+    \end{equation}
+    Điều này giúp ổn định quá trình huấn luyện và cải thiện hiệu suất.
+    
+    \item \textbf{Reshape dữ liệu:} Dữ liệu được định hình lại thành tensor 3 chiều $(28 \times 28 \times 1)$ để phù hợp với đầu vào của CNN:
+    \begin{equation}
+        X \in \mathbb{R}^{784} \xrightarrow{\text{Reshape}} X' \in \mathbb{R}^{28 \times 28 \times 1}
+    \end{equation}
+    
+    \item \textbf{Mã hóa nhãn (One-hot encoding):} Nhãn được chuyển đổi từ số nguyên sang vector one-hot để phù hợp với hàm mất mát \texttt{categorical\_crossentropy}.
+\end{itemize}
+
+\subsection{Thiết kế kiến trúc mạng sequential}
+
+\begin{table}[H]
+\centering
+\small % Giảm cỡ chữ một chút để bảng trông thanh thoát hơn
+\caption{Chi tiết cấu trúc các tầng trong mô hình CNN đề xuất}
+\begin{tabularx}{\textwidth}{|l|l|X|} % X là cột tự động xuống dòng và lấp đầy khoảng trống
+\hline
+\textbf{Tầng (Layer)} & \textbf{Tham số cấu hình} & \textbf{Chức năng} \\ \hline
+\textbf{Conv2D\_1} & 32 filters, size 3x3, ReLU & Trích xuất các đặc trưng cơ bản (cạnh, nét). \\ \hline
+\textbf{MaxPooling\_1} & Pool size 2x2 & Giảm kích thước không gian, giữ đặc trưng mạnh nhất. \\ \hline
+\textbf{Conv2D\_2} & 64 filters, size 3x3, ReLU & Trích xuất các đặc trưng phức tạp hơn. \\ \hline
+\textbf{MaxPooling\_2} & Pool size 2x2 & Tiếp tục giảm chiều dữ liệu. \\ \hline
+\textbf{Conv2D\_3} & 64 filters, size 3x3, ReLU & Trích xuất đặc trưng bậc cao. \\ \hline
+\textbf{Flatten} & \centering - & Chuyển đổi Tensor 3D thành Vector 1D. \\ \hline
+\textbf{Dense (Hidden)} & 64 units, ReLU & Kết hợp các đặc trưng để chuẩn bị phân loại. \\ \hline
+\textbf{Dense (Output)} & 10 units, Softmax & Trả về xác suất dự đoán cho 10 chữ số. \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsection{Triển khai (Implement)}
+
+\subsubsection{Sơ đồ cấu trúc thư mục (Project Structure)}
+
+Dự án phân loại chữ số MNIST sử dụng CNN được tổ chức theo cấu trúc thư mục tương tự như mô hình SVM để đảm bảo tính nhất quán và dễ bảo trì:
+
+\begin{itemize}
+    \item \textbf{main.py:} File chính để chạy chương trình, chứa hàm \texttt{run\_cnn\_project()} để thực thi mô hình CNN.
+    
+    \item \textbf{Data\_preparation/:} Thư mục chứa các module xử lý dữ liệu.
+    \begin{itemize}
+        \item \texttt{\_\_init\_\_.py:} File khởi tạo package.
+        \item \texttt{data\_loader.py:} Chứa hàm \texttt{load\_and\_prepare\_for\_cnn()} để chuẩn bị dữ liệu cho CNN.
+    \end{itemize}
+    
+    \item \textbf{Models/:} Thư mục chứa các module định nghĩa mô hình.
+    \begin{itemize}
+        \item \texttt{\_\_init\_\_.py:} File khởi tạo package.
+        \item \texttt{cnn\_model.py:} Chứa các hàm xây dựng, huấn luyện, lưu và đánh giá mô hình CNN.
+    \end{itemize}
+    
+    \item \textbf{Results/:} Thư mục lưu trữ kết quả và mô hình đã huấn luyện.
+    \begin{itemize}
+        \item \texttt{mnist\_cnn\_model.h5:} Mô hình CNN đã được lưu.
+        \item \texttt{Result CNN.txt:} Kết quả đánh giá của mô hình CNN.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Quá trình huấn luyện AI}
+
+Quá trình huấn luyện mô hình CNN được thực hiện theo các bước chi tiết sau:
+
+\begin{enumerate}
+    \item \textbf{Tải và tiền xử lý dữ liệu:} \\Sử dụng hàm \texttt{load\_and\_prepare\_for\_cnn()} từ module \texttt{Data\_preparation/data\_loader.py}. Dữ liệu MNIST được tải từ thư viện TensorFlow/Keras. Các bước tiền xử lý bao gồm:
+    \begin{itemize}
+        \item Reshape dữ liệu từ (28, 28) thành (28, 28, 1) để phù hợp với đầu vào CNN (thêm chiều kênh màu).
+        \item Chuẩn hóa giá trị pixel từ khoảng [0, 255] về [0.0, 1.0] bằng cách chia cho 255.0.
+        \item Mã hóa nhãn thành dạng one-hot encoding sử dụng \texttt{to\_categorical} để phù hợp với hàm mất mát categorical crossentropy.
+    \end{itemize}
+    
+    \item \textbf{Xây dựng kiến trúc mạng:} \\Sử dụng hàm \texttt{build\_cnn\_model()} từ module \texttt{Models/cnn\_model.py}. Mô hình bao gồm:
+    \begin{itemize}
+        \item 3 lớp tích chập (Conv2D) với kích thước kernel 3×3 và hàm kích hoạt ReLU.
+        \item 2 lớp MaxPooling với pool size 2×2 để giảm chiều dữ liệu.
+        \item Lớp Flatten để chuyển đổi tensor thành vector.
+        \item 2 lớp Dense: một lớp ẩn với 64 units và ReLU, một lớp đầu ra với 10 units và Softmax.
+        \item Optimizer: Adam, Loss function: Categorical Crossentropy, Metrics: Accuracy.
+    \end{itemize}
+    
+    \item \textbf{Huấn luyện mô hình:} \\Sử dụng hàm \texttt{train\_cnn()} với các tham số:
+    \begin{itemize}
+        \item Số epochs: 5 (đủ để hội tụ).
+        \item Batch size: 64.
+        \item Validation split: 10\% dữ liệu huấn luyện được dùng để validation.
+        \item Callback TimingCallback để theo dõi thời gian mỗi epoch.
+    \end{itemize}
+    
+    \item \textbf{Lưu trữ mô hình:} \\Mô hình đã huấn luyện được lưu vào file \texttt{Results/mnist\_cnn\_model.h5} dưới định dạng HDF5 để có thể tái sử dụng.
+    
+\end{enumerate}
+
+\subsubsection{Giải thích các hàm quan trọng (Code Snippets)}
+
+Trong phần triển khai CNN, các hàm quan trọng được định nghĩa trong file \texttt{Models/cnn\_model.py}. Dưới đây là giải thích chi tiết:
+
+\paragraph{Hàm \texttt{build\_cnn\_model(input\_shape=(28, 28, 1), num\_classes=10)}:}
+Hàm này xây dựng kiến trúc mạng CNN sequential sử dụng Keras. Mạng bao gồm các lớp tích chập với MaxPooling để trích xuất đặc trưng, sau đó là các lớp fully connected để phân loại. Hàm compile mô hình với optimizer Adam và loss categorical crossentropy.
+
+\paragraph{Hàm \texttt{train\_cnn(model, X\_train, y\_train, epochs=10, batch\_size=64)}:}
+Hàm huấn luyện mô hình CNN với dữ liệu huấn luyện. Sử dụng validation split 10\% và callback tùy chỉnh để theo dõi thời gian mỗi epoch. Trả về mô hình đã huấn luyện và lịch sử huấn luyện.
+
+\paragraph{Hàm \texttt{save\_cnn\_model(model, filename='results/cnn\_model.h5')}:}
+Lưu mô hình CNN đã huấn luyện dưới định dạng HDF5 sử dụng Keras.
+
+\paragraph{Hàm \texttt{evaluate\_cnn(model, X\_test, y\_test)}:}
+Đánh giá mô hình trên tập kiểm tra, tính độ chính xác, hiển thị ma trận nhầm lẫn và báo cáo phân loại. Sử dụng predict để chuyển đổi đầu ra softmax thành nhãn dự đoán.
+
+Lớp \texttt{TimingCallback} là một callback tùy chỉnh để theo dõi thời gian huấn luyện mỗi epoch và hiển thị thông tin chi tiết.
+
+\end{document}

@@ -1,0 +1,171 @@
+\documentclass[../DoAn.tex]{subfiles}
+\begin{document}
+
+Chương này trình bày các kết quả đạt được sau quá trình huấn luyện và đánh giá hệ thống trên bộ dữ liệu MNIST. Các số liệu được thu thập dựa trên môi trường thực thi thực tế để đưa ra cái nhìn khách quan về hiệu năng của các thuật toán.
+
+\section{Kết quả thực nghiệm trên mô hình SVM}
+
+Mô hình SVM với cấu hình Kernel RBF và chiến lược One-vs-One (OvO) đã được huấn luyện trên toàn bộ tập dữ liệu 60,000 mẫu và đánh giá trên 10,000 mẫu kiểm tra.
+
+\subsection{Hiệu năng tổng quát}
+
+Các thông số về thời gian thực thi và độ chính xác tổng quát của mô hình được tóm tắt trong Bảng 4.1.
+
+\begin{table}[H]
+\centering
+\caption{Hiệu năng tổng quát của mô hình SVM}
+\label{tab:svm_general_perf}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Thông số} & \textbf{Giá trị thực nghiệm} \\ \hline
+Thời gian huấn luyện (Training Time) & 194.61 giây \\ \hline
+Thời gian dự đoán trung bình & $\approx$ 0.02 s/ảnh \\ \hline
+Độ chính xác cuối cùng (Final Accuracy) & \textbf{97.9200\%} \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Nhận xét:} Với thời gian huấn luyện xấp xỉ 3 phút trên nền tảng phần cứng cá nhân, mô hình đã đạt được độ chính xác rất cao. Điều này minh chứng cho sức mạnh của Kernel RBF trong việc phân tách dữ liệu trong không gian đặc trưng 784 chiều của ảnh MNIST.
+
+\subsection{Phân tích ma trận nhầm lẫn (Confusion Matrix)}
+
+Ma trận nhầm lẫn giúp quan sát chi tiết khả năng phân loại của mô hình trên từng lớp chữ số, đồng thời xác định các cặp chữ số dễ gây nhầm lẫn nhất.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Ma trận nhầm lẫn của mô hình SVM trên 10,000 mẫu kiểm tra}
+\label{tab:svm_cm}
+\begin{tabular}{r|cccccccccc}
+\hline
+\textbf{Thực tế \textbackslash{} Dự đoán} & \textbf{0} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} & \textbf{9} \\ \hline
+\textbf{0} & 973 & 0   & 1   & 0   & 0   & 2   & 1   & 1   & 2   & 0   \\
+\textbf{1} & 0   & 1126 & 3   & 1   & 0   & 1   & 1   & 1   & 2   & 0   \\
+\textbf{2} & 6   & 1   & 1006 & 2   & 1   & 0   & 2   & 7   & 6   & 1   \\
+\textbf{3} & 0   & 0   & 2   & 995 & 0   & 2   & 0   & 5   & 5   & 1   \\
+\textbf{4} & 0   & 0   & 5   & 0   & 961 & 0   & 3   & 0   & 2   & 11  \\
+\textbf{5} & 2   & 0   & 0   & 9   & 0   & 871 & 4   & 1   & 4   & 1   \\
+\textbf{6} & 6   & 2   & 0   & 0   & 2   & 3   & 944 & 0   & 1   & 0   \\
+\textbf{7} & 0   & 6   & 11  & 1   & 1   & 0   & 0   & 996 & 2   & 11  \\
+\textbf{8} & 3   & 0   & 2   & 6   & 3   & 2   & 2   & 3   & 950 & 3   \\
+\textbf{9} & 3   & 4   & 1   & 7   & 10  & 2   & 1   & 7   & 4   & 970 \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Phân tích sai số:} Dựa trên kết quả Bảng 4.2, mô hình gặp khó khăn nhất ở các cặp chữ số có sự tương đồng về cấu trúc hình học:
+\begin{itemize}
+    \item \textbf{Cặp (4, 9):} Có 11 trường hợp chữ số 4 bị nhầm sang 9 và 10 trường hợp ngược lại. Sự nhầm lẫn này thường do nét viết tay của phần trên số 9 hoặc nét gạch ngang của số 4 không rõ ràng.
+    \item \textbf{Cặp (2, 7):} Có 11 trường hợp chữ số 7 bị nhầm sang 2, cho thấy sự tương đồng ở nét gạch ngang và độ cong của thân chữ.
+\end{itemize}
+
+\subsection{Chỉ số chi tiết (Classification Report)}
+
+Các chỉ số Precision, Recall và F1-score giúp đánh giá sự cân bằng của mô hình trên toàn bộ 10 lớp chữ số.
+
+\begin{table}[H]
+\centering
+\caption{Báo cáo kết quả chi tiết theo từng lớp (SVM)}
+\label{tab:svm_report}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Lớp (Digit)} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Số lượng mẫu} \\ \hline
+0 & 0.98 & 0.99 & 0.99 & 980 \\ \hline
+1 & 0.99 & 0.99 & 0.99 & 1135 \\ \hline
+2 & 0.98 & 0.97 & 0.98 & 1032 \\ \hline
+3 & 0.97 & 0.99 & 0.98 & 1010 \\ \hline
+4 & 0.98 & 0.98 & 0.98 & 982 \\ \hline
+5 & 0.99 & 0.98 & 0.98 & 892 \\ \hline
+6 & 0.99 & 0.99 & 0.99 & 958 \\ \hline
+7 & 0.98 & 0.97 & 0.97 & 1028 \\ \hline
+8 & 0.97 & 0.98 & 0.97 & 974 \\ \hline
+9 & 0.97 & 0.96 & 0.97 & 1009 \\ \hline
+\hline
+\textbf{Trung bình} & \textbf{0.98} & \textbf{0.98} & \textbf{0.98} & \textbf{10,000} \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Nhận xét:} Chỉ số F1-score luôn duy trì ở mức từ 0.97 đến 0.99 cho tất cả các lớp. Điều này khẳng định chiến lược One-vs-One đã giúp mô hình không bị thiên lệch và đạt được sự ổn định rất cao trong việc phân loại đa lớp.
+
+\section{Kết quả thực nghiệm trên mô hình CNN}
+
+Mô hình CNN được huấn luyện thông qua 5 chu kỳ (epochs) với dữ liệu tensor 4D. Kết quả cho thấy tốc độ hội tụ nhanh và khả năng tổng quát hóa dữ liệu xuất sắc.
+
+\subsection{Hiệu năng tổng quát và Quá trình hội tụ}
+
+Hiệu năng của mạng CNN được ghi lại chi tiết qua từng epoch, cho thấy sự sụt giảm ổn định của hàm mất mát (loss) và sự tăng trưởng của độ chính xác (accuracy).
+
+\begin{table}[H]
+\centering
+\caption{Tóm tắt hiệu năng huấn luyện và kiểm tra của CNN}
+\label{tab:cnn_general_perf}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Thông số} & \textbf{Giá trị thực nghiệm} \\ \hline
+Số lượng Epochs & 5 \\ \hline
+Thời gian huấn luyện tổng cộng & \textbf{47.16 giây} \\ \hline
+Thời gian trung bình mỗi bước & 11 ms/step \\ \hline
+Độ chính xác trên tập kiểm tra (Accuracy) & \textbf{99.0500\%} \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Nhận xét:} So với mô hình SVM, CNN có thời gian huấn luyện ngắn hơn đáng kể (47.16 giây so với 194.61 giây) nhờ vào khả năng tối ưu hóa song song của thư viện TensorFlow/Keras. Đồng thời, độ chính xác tăng từ 97.92\% lên 99.05\%, khẳng định ưu thế của việc trích xuất đặc trưng không gian qua các tầng tích chập.
+
+\subsection{Phân tích ma trận nhầm lẫn (Confusion Matrix)}
+
+Ma trận nhầm lẫn của CNN cho thấy các điểm dữ liệu bị phân loại sai đã giảm đi đáng kể so với SVM.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Ma trận nhầm lẫn của mô hình CNN trên 10,000 mẫu kiểm tra}
+\label{tab:cnn_cm}
+\begin{tabular}{r|cccccccccc}
+\hline
+\textbf{Thực tế \textbackslash{} Dự đoán} & \textbf{0} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} & \textbf{9} \\ \hline
+\textbf{0} & 977 & 0   & 1   & 0   & 0   & 0   & 0   & 1   & 1   & 0   \\
+\textbf{1} & 0   & 1130 & 1   & 1   & 1   & 0   & 1   & 0   & 0   & 1   \\
+\textbf{2} & 0   & 0   & 1029 & 1   & 1   & 0   & 0   & 1   & 0   & 0   \\
+\textbf{3} & 0   & 0   & 4   & 1001 & 0   & 3   & 0   & 0   & 1   & 1   \\
+\textbf{4} & 0   & 0   & 0   & 0   & 968 & 0   & 3   & 1   & 3   & 7   \\
+\textbf{5} & 1   & 0   & 1   & 5   & 0   & 882 & 1   & 0   & 2   & 0   \\
+\textbf{6} & 4   & 2   & 0   & 0   & 2   & 4   & 944 & 0   & 2   & 0   \\
+\textbf{7} & 0   & 2   & 13  & 0   & 0   & 0   & 0   & 1007 & 1   & 5   \\
+\textbf{8} & 2   & 0   & 1   & 2   & 0   & 0   & 0   & 0   & 968 & 1   \\
+\textbf{9} & 0   & 0   & 0   & 0   & 3   & 3   & 0   & 1   & 3   & 999 \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Phân tích sai số:} Mặc dù hiệu năng rất cao, mô hình vẫn còn một số ít nhầm lẫn:
+\begin{itemize}
+    \item \textbf{Cặp (7, 2):} Có 13 trường hợp số 7 bị nhầm thành số 2. Đây vẫn là cặp số gây khó khăn nhất do sự tương đồng về cấu trúc nét xiên ngang.
+    \item \textbf{Cặp (4, 9):} Số trường hợp nhầm lẫn đã giảm xuống chỉ còn 7 trường hợp (so với 11 trường hợp ở SVM), cho thấy các lớp tích chập đã trích xuất đặc trưng hình học tốt hơn.
+\end{itemize}
+
+\subsection{Chỉ số chi tiết (Classification Report)}
+
+Bảng chỉ số chi tiết dưới đây minh chứng cho sự ổn định của mô hình trên toàn bộ 10 chữ số.
+
+\begin{table}[H]
+\centering
+\caption{Báo cáo kết quả chi tiết theo từng lớp (CNN)}
+\label{tab:cnn_report}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Lớp (Digit)} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Số lượng mẫu} \\ \hline
+0 & 0.99 & 1.00 & 0.99 & 980 \\ \hline
+1 & 1.00 & 1.00 & 1.00 & 1135 \\ \hline
+2 & 0.98 & 1.00 & 0.99 & 1032 \\ \hline
+3 & 0.99 & 0.99 & 0.99 & 1010 \\ \hline
+4 & 0.99 & 0.99 & 0.99 & 982 \\ \hline
+5 & 0.99 & 0.99 & 0.99 & 892 \\ \hline
+6 & 0.99 & 0.99 & 0.99 & 958 \\ \hline
+7 & 1.00 & 0.98 & 0.99 & 1028 \\ \hline
+8 & 0.99 & 0.99 & 0.99 & 974 \\ \hline
+9 & 0.99 & 0.99 & 0.99 & 1009 \\ \hline
+\hline
+\textbf{Trung bình} & \textbf{0.99} & \textbf{0.99} & \textbf{0.99} & \textbf{10,000} \\ \hline
+\end{tabular}
+\end{table}
+
+\textbf{Nhận xét:} Với chỉ số F1-score đạt mức 0.99 cho hầu hết các lớp (riêng lớp số 1 đạt mức tuyệt đối 1.00), mô hình CNN đã thể hiện khả năng phân loại tốt, đặc biệt là sự cải thiện đáng kể ở lớp số 9 và số 2 so với mô hình SVM trước đó.
+
+\end{document}

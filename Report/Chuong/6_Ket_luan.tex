@@ -1,0 +1,16 @@
+\documentclass[../DoAn.tex]{subfiles}
+\begin{document}
+
+Sau quá trình nghiên cứu, triển khai và thực nghiệm bài toán nhận diện chữ số viết tay trên bộ dữ liệu MNIST, báo cáo đã hoàn thành các mục tiêu đề ra với những kết quả cụ thể như sau:
+
+\begin{itemize}
+    \item \textbf{Về mặt kỹ thuật:} Đã làm chủ và triển khai thành công hai phương pháp tiếp cận tiêu biểu: Học máy truyền thống (SVM với Kernel RBF) và Học sâu (CNN). Hệ thống đã được tổ chức theo mô hình mô-đun hóa chuyên nghiệp, từ khâu tiền xử lý dữ liệu đến huấn luyện và lưu trữ mô hình.
+    \item \textbf{Về mặt thực nghiệm:} 
+    \begin{itemize}
+        \item Mô hình CNN cho thấy ưu thế vượt trội với độ chính xác đạt \textbf{99.05\%} và thời gian huấn luyện tối ưu (47.16 giây). 
+        \item Mô hình SVM đạt độ chính xác ổn định \textbf{97.92\%}, khẳng định hiệu quả của chiến lược One-vs-One trong các bài toán phân loại đa lớp.
+    \end{itemize}
+    \item \textbf{Về mặt ứng dụng:} Xây dựng thành công ứng dụng minh họa (Demo) với giao diện Tkinter, cho phép người dùng tương tác trực quan và kiểm chứng kết quả dự đoán của các mô hình trong thời gian thực.
+\end{itemize} 
+
+\end{document}

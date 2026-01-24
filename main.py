@@ -1,9 +1,8 @@
-# main.py
 
-# Giả định: data_loader.py của bạn có hàm load_and_prepare_for_svm
-# Hàm này phải trả về (X_train_svm, y_train_svm, X_test_svm, y_test_svm)
 from Data_preparation.data_loader import load_and_prepare_for_svm
 from Models.svm_model import train_svm, evaluate_svm, MODEL_FILENAME, save_model, load_model
+from Data_preparation.data_loader import load_and_prepare_for_cnn
+from Models.cnn_model import build_cnn_model, train_cnn, evaluate_cnn, save_cnn_model
 
 def run_svm_project():
     print("==============================================")
@@ -14,9 +13,7 @@ def run_svm_project():
     X_train, y_train, X_test, y_test = load_and_prepare_for_svm()
     
     # 2. Huấn luyện mô hình
-    # 💡 Lời khuyên: Đặt max_samples=10000 để chạy nhanh khi thử nghiệm
-    # Khi chạy chính thức, hãy đặt max_samples=None để dùng toàn bộ 60,000 mẫu
-    MAX_SAMPLES_FOR_SVM = None # Hoặc None để dùng hết
+    MAX_SAMPLES_FOR_SVM = None 
     
     svm_model = train_svm(
         X_train=X_train, 
@@ -36,10 +33,30 @@ def run_svm_project():
     
     return final_accuracy
 
+def run_cnn_project():
+    print("==============================================")
+    print("     BẮT ĐẦU DỰ ÁN PHÂN LOẠI MNIST (CNN)      ")
+    print("==============================================")
+    
+    # 1. Chuẩn bị dữ liệu
+    X_train, y_train, X_test, y_test = load_and_prepare_for_cnn()
+    
+    # 2. Xây dựng và huấn luyện
+    model = build_cnn_model()
+    model, history = train_cnn(model, X_train, y_train, epochs=5) # 5 lần forward và backpropagation
+    
+    # 3. Lưu và đánh giá
+    save_cnn_model(model, 'Results/mnist_cnn_model.h5')
+    final_accuracy = evaluate_cnn(model, X_test, y_test)
+    
+    print(f"\n--- TÓM TẮT CNN ---")
+    print(f"Độ chính xác cuối cùng: {final_accuracy * 100:.4f}%")
+    
+    return final_accuracy
+
 if __name__ == '__main__':
     # Chạy mô hình SVM
-    run_svm_project()
-    
-    # Bạn có thể thêm hàm run_cnn_project() vào đây sau khi hoàn thành Giai đoạn 3
-    # print("\n" + "="*50 + "\n")
-    # run_cnn_project()
+    # run_svm_project()
+
+    # Chạy mô hình CNN
+    run_cnn_project()

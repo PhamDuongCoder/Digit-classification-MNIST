@@ -1,0 +1,203 @@
+\documentclass[../DoAn.tex]{subfiles}
+\usepackage{float}
+\begin{document}
+
+\section{Support Vector Machine (SVM)}
+\label{sec:svm_theory}
+
+\subsection{Bài toán phân loại tuyến tính}
+\label{subsec:svm_problem}
+
+Giả sử chúng ta có hai lớp (class) khác nhau được mô tả bởi các điểm trong không gian nhiều chiều. Trong trường hợp hai lớp này là phân tách tuyến tính (\textit{linearly separable}), tồn tại một siêu phẳng (hyperplane) có thể phân chia chính xác các điểm dữ liệu thuộc về hai lớp đó.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Hinh_ve/svm.png}
+    \caption{Minh họa siêu phẳng phân chia trong không gian hai chiều.}
+    \label{fig:svm_intro}
+\end{figure}
+
+Trên thực tế, có thể tồn tại nhiều mặt phân chia khác nhau. Thuật toán SVM tìm kiếm một siêu phẳng tối ưu sao cho khoảng cách từ điểm gần nhất của mỗi lớp đến mặt phân chia là bằng nhau và khoảng cách đó (gọi là lề - \textit{margin}) đạt giá trị lớn nhất có thể.
+
+\subsection{Xây dựng bài toán tối ưu}
+\label{subsec:svm_optimization}
+
+Giả sử tập dữ liệu huấn luyện bao gồm các cặp dữ liệu $(\mathbf{x}_n, y_n)$ với $n = 1, 2, \dots, N$, trong đó $\mathbf{x}_n \in \mathbb{R}^d$ là vector đầu vào $d$ chiều và $y_n \in \{1, -1\}$ là nhãn.
+
+Mục tiêu của thuật toán SVM là tìm bộ tham số $(\mathbf{w}, b)$ sao cho khoảng cách từ các điểm gần siêu phẳng nhất đến siêu phẳng đó là lớn nhất. Giả thuyết về lề hàm số cho phép chuẩn hóa sao cho $y_n(\mathbf{w}^T \mathbf{x}_n + b) \geq 1$ cho mọi điểm, dẫn đến bài toán tối ưu chuẩn tắc:
+
+\begin{equation}
+    \min_{\mathbf{w}, b} \frac{1}{2}\|\mathbf{w}\|_2^2 \quad \text{thỏa mãn } 1 - y_n \left( \sum_{j=1}^{d} w^{(j)} x_n^{(j)} + b \right) \leq 0, \forall n
+\end{equation}
+
+\subsection{Bài toán đối ngẫu}
+\label{subsec:dual_problem}
+
+Để giải bài toán tối ưu lồi với các ràng buộc bất đẳng thức, chúng ta sử dụng phương pháp nhân tử Lagrange để chuyển sang bài toán đối ngẫu. Điều kiện Slater được thỏa mãn, đảm bảo tính chất đối ngẫu mạnh.
+
+Bài toán đối ngẫu cuối cùng là:
+\begin{equation}
+    \boldsymbol{\lambda}^* = \arg\max_{\boldsymbol{\lambda}} g(\boldsymbol{\lambda})
+\end{equation}
+thỏa mãn:
+\begin{itemize}
+    \item $\lambda_n \geq 0, \quad \forall n = 1, 2, \dots, N$
+    \item $\sum_{n=1}^{N} \lambda_n y_n = 0$
+\end{itemize}
+
+\subsubsection{Vector hỗ trợ và Xác định tham số mô hình}
+
+Những điểm dữ liệu ứng với $\lambda_n > 0$ được gọi là các \textbf{Vector hỗ trợ (Support Vectors)}. Đây là những điểm nằm gần siêu phẳng phân chia nhất và trực tiếp quyết định vị trí của siêu phẳng đó.
+
+Sau khi giải được $\boldsymbol{\lambda}$ bằng thư viện tối ưu, ta xác định các tham số của mô hình như sau:
+\begin{enumerate}
+    \item \textbf{Tìm $\mathbf{w}$:} Thay các giá trị $\lambda_n$ vừa tìm được vào công thức đạo hàm:
+    \begin{equation}
+        \mathbf{w}^* = \sum_{n \in \mathcal{S}} \lambda_n y_n \mathbf{x}_n
+    \end{equation}
+    với $\mathcal{S}$ là tập chỉ số của các Support Vectors.
+    \item \textbf{Tìm $b$:} Với bất kỳ một Support Vector $\mathbf{x}_k$ ($k \in \mathcal{S}$), ta có phương trình $y_k(\mathbf{w}^T \mathbf{x}_k + b) = 1$. Nhân cả hai vế với $y_k$ (do $y_k^2 = 1$), ta thu được:
+    \begin{equation}
+        b^* = y_k - \mathbf{w}^{*T} \mathbf{x}_k = y_k - \sum_{j=1}^{d} w^{*(j)} x_k^{(j)}
+    \end{equation}
+    Để kết quả ổn định hơn về mặt số học, giá trị $b^*$ thường được tính bằng cách lấy trung bình cộng trên toàn bộ tập Support Vectors $\mathcal{S}$.
+\end{enumerate}
+
+\subsection{Soft Margin Support Vector Machine}
+\label{subsec:soft_margin_svm}
+
+Trong thực tế, phương pháp Hard Margin SVM gặp phải hai hạn chế lớn: dữ liệu phân tách tuyến tính nhưng có nhiễu, hoặc dữ liệu không phân tách tuyến tính.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Hinh_ve/ssvm1.png}
+    \caption{Ảnh hưởng của điểm nhiễu đối với Hard Margin SVM.}
+    \label{fig:ssvm1}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Hinh_ve/ssvm2.png}
+    \caption{Dữ liệu không thể phân tách tuyến tính.}
+    \label{fig:ssvm2}
+\end{figure}
+
+Để giải quyết, khái niệm Soft Margin được đưa ra. Với mỗi điểm dữ liệu $\mathbf{x}_n$, chúng ta giới thiệu biến bù $\xi_n \geq 0$ đại diện cho độ vi phạm. Ràng buộc mềm là $y_n(\mathbf{w}^T \mathbf{x}_n + b) \geq 1 - \xi_n$.
+
+Tham số $C > 0$ cân bằng giữa tối đa hóa lề và cực tiểu hóa sai số. Bài toán tối ưu là:
+\begin{equation}
+    \min_{\mathbf{w}, b, \boldsymbol{\xi}} \frac{1}{2}\|\mathbf{w}\|_2^2 + C \sum_{n=1}^{N} \xi_n
+\end{equation}
+
+Bài toán đối ngẫu cuối cùng:
+\begin{equation}
+\lambda = \arg \max_{\lambda} \left( \sum_{n=1}^N \lambda_n - \frac{1}{2}\sum_{n=1}^N \sum_{m=1}^N \lambda_n \lambda_m y_n y_m x_n^T x_m \right)
+\end{equation}
+với $0 \leq \lambda_n \leq C$ và $\sum \lambda_n y_n = 0$.
+
+Phân tích vị trí các điểm dữ liệu dựa trên KKT:
+\begin{itemize}
+    \item $\lambda_n = 0$: Điểm nằm trong vùng an toàn (đúng phía và ngoài lề).
+    \item $0 < \lambda_n < C$: Điểm nằm chính xác trên đường margin.
+    \item $\lambda_n = C$: Điểm vi phạm margin (nhiễu hoặc phân lớp sai).
+\end{itemize}
+
+\subsection{Kernel Support Vector Machine}
+
+Kernel SVM giải quyết vấn đề khi dữ liệu không phân tách tuyến tính bằng cách ánh xạ sang không gian cao chiều.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Hinh_ve/ksvm1.png}
+    \caption{Dữ liệu phi tuyến tính trong không gian 2 chiều.}
+\end{figure}
+
+Ý tưởng là ánh xạ dữ liệu qua hàm $\Phi(\mathbf{x})$ để phân tách tuyến tính trong không gian mới.
+
+Hàm Kernel $K(\mathbf{x}, \mathbf{z}) = \Phi(\mathbf{x})^T \Phi(\mathbf{z})$ cho phép tính tích vô hướng mà không cần ánh xạ trực tiếp.
+
+Bài toán tối ưu với Kernel:
+\begin{equation}
+    \lambda = \arg \max_{\lambda} \left( \sum_{n=1}^N \lambda_n - \frac{1}{2}\sum_{n=1}^N \sum_{m=1}^N \lambda_n \lambda_m y_n y_m K(\mathbf{x}_n, \mathbf{x}_m) \right)
+\end{equation}
+
+Công thức dự đoán nhãn:
+\begin{equation}
+    y_{new} = \text{sgn} \left( \sum_{m \in S} \lambda_m y_m K(\mathbf{x}_m, \mathbf{x}) + b \right)
+\end{equation}
+
+\section{Convolutional Neural Network (CNN)}
+
+\subsection{Mạng nơ-ron truyền thống (Fully Connected Network)}
+
+Trước khi đi sâu vào kiến trúc CNN, ta xem xét mô hình mạng nơ-ron truyền thống, nơi mỗi nơ-ron ở tầng này kết nối với toàn bộ nơ-ron ở tầng kế tiếp.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Hinh_ve/neural_network.png}
+    \caption{Mô hình mạng nơ-ron truyền thống với các tầng liên kết đầy đủ.}
+\end{figure}
+
+Tuy nhiên, đối với dữ liệu hình ảnh, mạng liên kết đầy đủ có hai hạn chế lớn: sự bùng nổ tham số do số lượng kết nối lớn, và mất thông tin không gian khi flatten ảnh thành vector.
+
+\subsection{Mạng nơ-ron tích chập (CNN)}
+
+CNN giải quyết các nhược điểm trên bằng cách sử dụng kết nối cục bộ và chia sẻ trọng số.
+
+\subsubsection{Kernel và Bias}
+
+CNN sử dụng bộ lọc (Kernel) trượt trên ảnh để thực hiện phép nhân chập.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Hinh_ve/cnn.png}
+    \caption{Quá trình trượt Kernel trên ảnh đầu vào để trích xuất đặc trưng.}
+\end{figure}
+
+Công thức tích chập:
+\begin{equation}
+    O_{i,j} = \sum_{m} \sum_{n} (I_{i+m, j+n} \cdot K_{m,n}) + b
+\end{equation}
+
+\subsubsection{Hàm kích hoạt (Activation Function)}
+
+Hàm ReLU được sử dụng phổ biến:
+\begin{equation}
+    f(x) = \max(0, x)
+\end{equation}
+
+\subsubsection{Lớp lấy mẫu cực đại (Max Pooling)}
+
+Max Pooling giảm kích thước dữ liệu bằng cách lấy giá trị lớn nhất trong vùng.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Hinh_ve/max_pooling.png}
+    \caption{Minh họa cơ chế Max Pooling giúp giảm chiều dữ liệu.}
+\end{figure}
+
+\subsubsection{Hàm mục tiêu và Phân loại (Loss Function)}
+
+Hàm Softmax chuyển logits thành xác suất:
+\begin{equation}
+    \hat{y}_i = \frac{e^{z_i}}{\sum_{j=1}^n e^{z_j}}
+\end{equation}
+
+Hàm mất mát Cross-Entropy:
+\begin{equation}
+    L = -\sum_{i=1}^n y_i \log(\hat{y}_i)
+\end{equation}
+
+Mục tiêu là tối thiểu hóa $L$.
+
+\subsubsection{Lan truyền ngược (Backpropagation)}
+
+Quá trình lan truyền ngược sử dụng quy tắc chuỗi để tính đạo hàm và cập nhật tham số.
+
+Công thức cập nhật:
+\begin{align}
+    K_{new} &= K_{old} - \eta \cdot \frac{\partial L}{\partial K} \\
+    b_{new} &= b_{old} - \eta \cdot \frac{\partial L}{\partial b}
+\end{align}
+
+\end{document}

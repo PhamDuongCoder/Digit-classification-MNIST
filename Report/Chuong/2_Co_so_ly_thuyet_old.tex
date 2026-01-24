@@ -1,0 +1,573 @@
+\documentclass[../DoAn.tex]{subfiles}
+\usepackage{float}
+\begin{document}
+
+\section{Support Vector Machine (SVM)}
+\label{sec:svm_theory}
+
+\subsection{Bài toán phân loại tuyến tính}
+\label{subsec:svm_problem}
+
+Giả sử chúng ta có hai lớp (class) khác nhau được mô tả bởi các điểm trong không gian nhiều chiều. Trong trường hợp hai lớp này là phân tách tuyến tính (\textit{linearly separable}), tồn tại một siêu phẳng (hyperplane) có thể phân chia chính xác các điểm dữ liệu thuộc về hai lớp đó.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Hinh_ve/svm.png}
+    \caption{Minh họa siêu phẳng phân chia trong không gian hai chiều.}
+    \label{fig:svm_intro}
+\end{figure}
+
+Trên thực tế, có thể tồn tại nhiều mặt phân chia khác nhau. Thuật toán SVM tìm kiếm một siêu phẳng tối ưu sao cho khoảng cách từ điểm gần nhất của mỗi lớp đến mặt phân chia là bằng nhau và khoảng cách đó (gọi là lề - \textit{margin}) đạt giá trị lớn nhất có thể.
+
+\subsection{Xây dựng bài toán tối ưu}
+\label{subsec:svm_optimization}
+
+Giả sử tập dữ liệu huấn luyện bao gồm các cặp dữ liệu $(\mathbf{x}_n, y_n)$ với $n = 1, 2, \dots, N$. Trong đó:
+\begin{itemize}
+    \item $\mathbf{x}_n \in \mathbb{R}^d$ là vector đầu vào $d$ chiều, đại diện cho mẫu thứ $n$:
+    \begin{equation}
+        \mathbf{x}_n = \left( x_n^{(1)}, x_n^{(2)}, \dots, x_n^{(d)} \right)^T
+    \end{equation}
+    \item $y_n \in \{1, -1\}$ là nhãn của dữ liệu.
+\end{itemize}
+
+Gọi siêu phẳng phân chia là $\mathbf{w}^T \mathbf{x} + b = 0$, trong đó vector trọng số $\mathbf{w}$ cũng là một vector $d$ chiều:
+\begin{equation}
+    \mathbf{w} = \left( w^{(1)}, w^{(2)}, \dots, w^{(d)} \right)^T
+\end{equation}
+
+Khi đó, khoảng cách hình học từ một mẫu dữ liệu $\mathbf{x}_n$ đến siêu phẳng được xác định bởi công thức:
+\begin{equation}
+    d(\mathbf{x}_n) = \frac{|\mathbf{w}^T \mathbf{x}_n + b|}{\|\mathbf{w}\|_2}
+\end{equation}
+
+Trong đó, $\|\mathbf{w}\|_2$ là chuẩn bậc hai ($L_2$-norm) của vector trọng số, được tính bằng:
+\begin{equation}
+    \|\mathbf{w}\|_2 = \sqrt{(w^{(1)})^2 + (w^{(2)})^2 + \dots + (w^{(d)})^2} = \sqrt{\sum_{j=1}^{d} (w^{(j)})^2}
+\end{equation}
+
+Tích vô hướng $\mathbf{w}^T \mathbf{x}_n$ trong công thức trên được khai triển dựa trên các thành phần đặc trưng như sau:
+\begin{equation}
+    \mathbf{w}^T \mathbf{x}_n = \sum_{j=1}^{d} w^{(j)} x_n^{(j)}
+\end{equation}
+
+Không mất tính tổng quát, chúng ta có thể giả sử rằng đối với các điểm dữ liệu thuộc lớp dương ($y_n = 1$), siêu phẳng phân chia thỏa mãn $\mathbf{w}^T \mathbf{x}_n + b > 0$. Ngược lại, với các điểm thuộc lớp âm ($y_n = -1$), ta có $\mathbf{w}^T \mathbf{x}_n + b < 0$. Khi đó, khoảng cách từ mỗi điểm $\mathbf{x}_n$ đến siêu phẳng có thể được viết gọn dưới dạng:
+\begin{equation}
+    d_n = \frac{y_n(\mathbf{w}^T \mathbf{x}_n + b)}{\|\mathbf{w}\|_2}
+\end{equation}
+
+Mục tiêu của thuật toán SVM là tìm bộ tham số $(\mathbf{w}, b)$ sao cho khoảng cách từ các điểm gần siêu phẳng nhất đến siêu phẳng đó là lớn nhất. Bài toán tối ưu được phát biểu như sau:
+\begin{equation}
+    (\mathbf{w}, b) = \arg\max_{\mathbf{w}, b} \left\{ \min_{n=1 \dots N} \frac{y_n(\mathbf{w}^T \mathbf{x}_n + b)}{\|\mathbf{w}\|_2} \right\}
+\end{equation}
+Do $\|\mathbf{w}\|_2$ là một hằng số đối với phép toán $\min_n$, ta có thể đưa nó ra ngoài:
+\begin{equation}
+    (\mathbf{w}, b) = \arg\max_{\mathbf{w}, b} \left\{ \frac{1}{\|\mathbf{w}\|_2} \min_{n=1 \dots N} y_n(\mathbf{w}^T \mathbf{x}_n + b) \right\}
+\end{equation}
+
+\subsubsection*{Giả thuyết về lề hàm số (Functional Margin)}
+
+Một quan sát quan trọng là siêu phẳng phân chia không thay đổi nếu chúng ta nhân cả $\mathbf{w}$ và $b$ với cùng một hằng số dương $k \in \mathbb{R}^+$. Nói cách khác, phương trình $\mathbf{w}^T \mathbf{x} + b = 0$ và $(k\mathbf{w})^T \mathbf{x} + (kb) = 0$ biểu diễn cùng một siêu phẳng.
+
+Vì lý do đó, chúng ta có thể tự do thay đổi độ lớn của $\mathbf{w}$ và $b$ bằng cách chọn $k$ sao cho đối với những điểm nằm gần siêu phẳng nhất, giá trị tuyệt đối của biểu thức đại số bằng đúng $1$:
+\begin{equation}
+    \min_{n=1 \dots N} y_n(\mathbf{w}^T \mathbf{x}_n + b) = 1
+\end{equation}
+Khi đó, đối với mọi điểm dữ liệu trong tập huấn luyện, ta luôn có ràng buộc:
+\begin{equation}
+    y_n(\mathbf{w}^T \mathbf{x}_n + b) \geq 1, \quad \forall n = 1, 2, \dots, N
+\end{equation}
+
+\subsubsection*{Bài toán tối ưu chuẩn tắc}
+
+Nhờ giả thuyết trên, bài toán tối ưu ban đầu trở nên đơn giản hơn, chỉ còn phụ thuộc vào việc tối đa hóa giá trị $1/\|\mathbf{w}\|_2$:
+\begin{equation}
+    (\mathbf{w}, b) = \arg\max_{\mathbf{w}, b} \frac{1}{\|\mathbf{w}\|_2} \quad \text{thỏa mãn } y_n(\mathbf{w}^T \mathbf{x}_n + b) \geq 1, \forall n
+\end{equation}
+
+Để thuận tiện cho việc tính toán đạo hàm trong các bước sau, bài toán này thường được chuyển về dạng tương đương là cực tiểu hóa hàm bậc hai (dạng chuẩn tắc):
+\begin{equation}
+    \min_{\mathbf{w}, b} \frac{1}{2}\|\mathbf{w}\|_2^2 \quad \text{thỏa mãn } 1 - y_n \left( \sum_{j=1}^{d} w^{(j)} x_n^{(j)} + b \right) \leq 0, \forall n
+\end{equation}
+
+\subsection{Bài toán đối ngẫu}
+\label{subsec:dual_problem}
+
+Để giải bài toán tối ưu lồi với các ràng buộc bất đẳng thức, chúng ta sử dụng phương pháp nhân tử Lagrange để chuyển bài toán gốc (\textit{Primal problem}) sang bài toán đối ngẫu (\textit{Dual problem}).
+
+\subsubsection{Kiểm tra điều kiện Slater}
+Để đảm bảo tính chất đối ngẫu mạnh (\textit{Strong Duality}), tức là giá trị tối ưu của bài toán gốc và bài toán đối ngẫu bằng nhau, điều kiện Slater cần được thỏa mãn. 
+
+Đối với bài toán SVM trong trường hợp phân tách tuyến tính, rõ ràng tồn tại bộ tham số $(\mathbf{w}_0, b_0)$ sao cho mọi điểm dữ liệu đều thỏa mãn ràng buộc:
+\begin{equation}
+    1 - y_n(\mathbf{w}_0^T \mathbf{x}_n + b_0) \leq 0, \quad \forall n = 1, \dots, N
+\end{equation}
+Nếu ta chọn bộ tham số mới $(\mathbf{w}_1, b_1) = (2\mathbf{w}_0, 2b_0)$, khi đó:
+\begin{equation}
+    1 - y_n(\mathbf{w}_1^T \mathbf{x}_n + b_1) = 1 - 2y_n(\mathbf{w}_0^T \mathbf{x}_n + b_0) \leq 1 - 2(1) = -1 < 0
+\end{equation}
+Vì tồn tại điểm $(\mathbf{w}_1, b_1)$ khiến các ràng buộc bất đẳng thức được thỏa mãn một cách chặt chẽ (\textit{strictly feasible}), điều kiện Slater được thỏa mãn. Điều này cho phép ta giải bài toán đối ngẫu thay cho bài toán gốc.
+
+\subsubsection{Hàm Lagrange}
+Hàm Lagrange của bài toán tối ưu SVM được xây dựng bằng cách kết hợp hàm mục tiêu và các ràng buộc kèm theo các nhân tử Lagrange $\lambda_n \geq 0$:
+\begin{equation}
+    \mathcal{L}(\mathbf{w}, b, \boldsymbol{\lambda}) = \frac{1}{2} \|\mathbf{w}\|_2^2 + \sum_{n=1}^{N} \lambda_n \left( 1 - y_n \left( \sum_{j=1}^{d} w^{(j)} x_n^{(j)} + b \right) \right)
+    \label{eq:lagrange_function}
+\end{equation}
+Với $\lambda_n \geq 0, \forall n = 1, 2, \dots, N$.
+
+\subsubsection{Hàm đối ngẫu Lagrange}
+Hàm đối ngẫu được xác định bằng cách cực tiểu hóa hàm $\mathcal{L}$ theo các biến $\mathbf{w}$ và $b$:
+\begin{equation}
+    g(\boldsymbol{\lambda}) = \min_{\mathbf{w}, b} \mathcal{L}(\mathbf{w}, b, \boldsymbol{\lambda})
+\end{equation}
+Để tìm giá trị cực tiểu, ta tính đạo hàm riêng của $\mathcal{L}$ theo $\mathbf{w}$ và $b$ rồi cho bằng 0:
+\begin{itemize}
+    \item Đạo hàm theo $\mathbf{w}$:
+    \begin{equation}
+        \frac{\partial \mathcal{L}}{\partial \mathbf{w}} = \mathbf{w} - \sum_{n=1}^{N} \lambda_n y_n \mathbf{x}_n = 0 \implies \mathbf{w} = \sum_{n=1}^{N} \lambda_n y_n \mathbf{x}_n
+        \label{eq:derivative_w}
+    \end{equation}
+    \item Đạo hàm theo $b$:
+    \begin{equation}
+        \frac{\partial \mathcal{L}}{\partial b} = -\sum_{n=1}^{N} \lambda_n y_n = 0
+        \label{eq:derivative_b}
+    \end{equation}
+\end{itemize}
+
+Thay các biểu thức (2.17) và (2.18) vào phương trình hàm Lagrange (2.16), sau khi rút gọn, ta thu được hàm đối ngẫu Lagrange chỉ còn phụ thuộc vào $\boldsymbol{\lambda}$:
+\begin{equation}
+    g(\boldsymbol{\lambda}) = \sum_{n=1}^{N} \lambda_n - \frac{1}{2} \sum_{n=1}^{N} \sum_{m=1}^{N} \lambda_n \lambda_m y_n y_m \left( \sum_{j=1}^{d} x_n^{(j)} x_m^{(j)} \right)
+    \label{eq:dual_final}
+\end{equation}
+
+Bài toán tối ưu SVM lúc này trở thành việc tìm $\boldsymbol{\lambda}$ để tối đa hóa hàm $g(\boldsymbol{\lambda})$ dưới các ràng buộc $\lambda_n \geq 0$ và $\sum \lambda_n y_n = 0$.
+
+\subsubsection{Giải bài toán đối ngẫu}
+
+Sau khi thu được hàm đối ngẫu $g(\boldsymbol{\lambda})$, mục tiêu của chúng ta là tìm bộ nhân tử Lagrange tối ưu:
+\begin{equation}
+    \boldsymbol{\lambda}^* = \arg\max_{\boldsymbol{\lambda}} g(\boldsymbol{\lambda})
+\end{equation}
+thỏa mãn các ràng buộc:
+\begin{itemize}
+    \item $\lambda_n \geq 0, \quad \forall n = 1, 2, \dots, N$
+    \item $\sum_{n=1}^{N} \lambda_n y_n = 0$
+\end{itemize}
+
+Đây là một bài toán tối ưu lồi dạng bậc hai (\textit{Quadratic Programming - QP}). Trong thực tế triển khai, bài toán này có thể được giải quyết hiệu quả bằng các thư viện tối ưu hóa chuyên dụng như \texttt{CVXOPT} trong Python.
+
+\subsubsection{Điều kiện KKT (Karush-Kuhn-Tucker)}
+
+Vì bài toán SVM là bài toán tối ưu lồi và thỏa mãn điều kiện Slater (đối ngẫu mạnh), nghiệm tối ưu của bài toán gốc $(\mathbf{w}^*, b^*)$ và bài toán đối ngẫu $\boldsymbol{\lambda}^*$ phải thỏa mãn hệ điều kiện KKT đầy đủ sau đây:
+
+\begin{enumerate}
+    \item \textbf{Tính khả thi của bài toán gốc (Primal Feasibility):}
+    \begin{equation}
+        1 - y_n \left( \sum_{j=1}^{d} w^{(j)} x_n^{(j)} + b \right) \leq 0, \quad \forall n = 1, \dots, N
+    \end{equation}
+    \item \textbf{Tính khả thi của bài toán đối ngẫu (Dual Feasibility):}
+    \begin{equation}
+        \lambda_n \geq 0, \quad \forall n = 1, \dots, N
+    \end{equation}
+    \item \textbf{Điều kiện bù trừ (Complementary Slackness):}
+    \begin{equation}
+        \lambda_n \left( 1 - y_n \left( \sum_{j=1}^{d} w^{(j)} x_n^{(j)} + b \right) \right) = 0, \quad \forall n = 1, \dots, N
+        \label{eq:kkt_slackness}
+    \end{equation}
+    \item \textbf{Điều kiện dừng (Stationarity):} Đạo hàm riêng của hàm Lagrange theo các biến gốc bằng 0 (đã trình bày ở phần trước):
+    \begin{equation}
+        \mathbf{w} = \sum_{n=1}^{N} \lambda_n y_n \mathbf{x}_n \quad \text{và} \quad \sum_{n=1}^{N} \lambda_n y_n = 0
+    \end{equation}
+\end{enumerate}
+
+\subsubsection{Vector hỗ trợ và Xác định tham số mô hình}
+
+Từ điều kiện bù trừ ở phương trình (2.23), chúng ta có thể rút ra những nhận định quan trọng về cấu trúc của mô hình:
+
+\begin{itemize}
+    \item Với những điểm có $\lambda_n = 0$: Các điểm này không đóng góp vào việc xác định vector trọng số $\mathbf{w}$ và nằm ngoài vùng lề.
+    \item Với những điểm có $\lambda_n > 0$: Để thỏa mãn phương trình (2.23), bắt buộc ta phải có $1 - y_n(\mathbf{w}^T \mathbf{x}_n + b) = 0$, hay $y_n(\mathbf{w}^T \mathbf{x}_n + b) = 1$. 
+\end{itemize}
+
+Những điểm dữ liệu ứng với $\lambda_n > 0$ được gọi là các \textbf{Vector hỗ trợ (Support Vectors)}. Đây là những điểm nằm gần siêu phẳng phân chia nhất và trực tiếp quyết định vị trí của siêu phẳng đó.
+
+Sau khi giải được $\boldsymbol{\lambda}$ bằng thư viện tối ưu, ta xác định các tham số của mô hình như sau:
+\begin{enumerate}
+    \item \textbf{Tìm $\mathbf{w}$:} Thay các giá trị $\lambda_n$ vừa tìm được vào công thức đạo hàm:
+    \begin{equation}
+        \mathbf{w}^* = \sum_{n \in \mathcal{S}} \lambda_n y_n \mathbf{x}_n
+    \end{equation}
+    với $\mathcal{S}$ là tập chỉ số của các Support Vectors.
+    \item \textbf{Tìm $b$:} Với bất kỳ một Support Vector $\mathbf{x}_k$ ($k \in \mathcal{S}$), ta có phương trình $y_k(\mathbf{w}^T \mathbf{x}_k + b) = 1$. Nhân cả hai vế với $y_k$ (do $y_k^2 = 1$), ta thu được:
+    \begin{equation}
+        b^* = y_k - \mathbf{w}^{*T} \mathbf{x}_k = y_k - \sum_{j=1}^{d} w^{*(j)} x_k^{(j)}
+    \end{equation}
+    Để kết quả ổn định hơn về mặt số học, giá trị $b^*$ thường được tính bằng cách lấy trung bình cộng trên toàn bộ tập Support Vectors $\mathcal{S}$.
+\end{enumerate}
+
+\subsection{Soft Margin Support Vector Machine}
+\label{subsec:soft_margin_svm}
+
+Trong thực tế, phương pháp Hard Margin SVM (lề cứng) gặp phải hai hạn chế lớn khiến mô hình hoạt động không hiệu quả hoặc thậm chí không thể tìm được nghiệm:
+
+\begin{itemize}
+    \item \textbf{Trường hợp 1: Dữ liệu phân tách tuyến tính nhưng có nhiễu (noise).} Chỉ cần một điểm dữ liệu nhiễu nằm sát hoặc lấn sang phía lớp kia, lề của siêu phẳng sẽ bị thu hẹp đáng kể, dẫn đến việc mô hình trở nên quá nhạy cảm và kém ổn định.
+    \begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.6\textwidth]{Hinh_ve/ssvm1.png}
+        \caption{Ảnh hưởng của điểm nhiễu đối với Hard Margin SVM.}
+        \label{fig:ssvm1}
+    \end{figure}
+
+    \item \textbf{Trường hợp 2: Dữ liệu không phân tách tuyến tính.} Khi các điểm dữ liệu của hai lớp đan xen lẫn nhau, không tồn tại bất kỳ siêu phẳng nào có thể phân chia tuyệt đối hai lớp, khiến bài toán Hard Margin không có nghiệm.
+    \begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.6\textwidth]{Hinh_ve/ssvm2.png}
+        \caption{Dữ liệu không thể phân tách tuyến tính.}
+        \label{fig:ssvm2}
+    \end{figure}
+\end{itemize}
+
+Để giải quyết vấn đề này, khái niệm \textbf{Soft Margin} (lề mềm) được đưa ra. Thay vì bắt buộc mọi điểm phải nằm đúng phía và ngoài vùng lề, chúng ta cho phép một số điểm "vi phạm" bằng cách nằm trong vùng lề hoặc thậm chí nằm sai phía của siêu phẳng. "Đường biên mềm" chính là siêu phẳng cho phép sự sai số này để đổi lấy một hành lang (margin) rộng hơn và ổn định hơn.
+
+\subsubsection{Lập bài toán tối ưu}
+
+Để cụ thể hóa ý tưởng trên, với mỗi điểm dữ liệu $\mathbf{x}_n$, chúng ta giới thiệu một biến bù (\textit{slack variable}) $\xi_n \geq 0$ (đọc là epsilon hoặc xi) đại diện cho "độ hy sinh" hay mức độ vi phạm của điểm đó:
+
+\begin{itemize}
+    \item \textbf{Vùng an toàn:} Là khu vực nằm đúng phía của siêu phẳng và nằm ngoài hoặc vừa đúng trên đường biên lề ($y_n(\mathbf{w}^T \mathbf{x}_n + b) \geq 1$). Với các điểm nằm trong vùng này, $\xi_n = 0$.
+    \item \textbf{Vùng vi phạm:} Nếu một điểm nằm trong hành lang lề hoặc sai phía siêu phẳng, $\xi_n$ sẽ bằng khoảng cách từ điểm đó tới biên lề tương ứng của lớp nó. Khi đó, $\xi_n > 0$.
+\end{itemize}
+
+Thay vì ràng buộc cứng, chúng ta sử dụng ràng buộc mềm:
+\begin{equation}
+    y_n \left( \sum_{j=1}^{d} w^{(j)} x_n^{(j)} + b \right) \geq 1 - \xi_n, \quad \xi_n \geq 0, \forall n = 1, \dots, N
+\end{equation}
+
+\subsubsection{Hàm mục tiêu và tham số C}
+
+Bài toán tối ưu bây giờ không chỉ là tối đa hóa lề (tương đương cực tiểu hóa $\frac{1}{2}\|\mathbf{w}\|_2^2$) mà còn phải đồng thời cực tiểu hóa tổng các sai số $\xi_n$. Điều này dẫn đến hàm mục tiêu mới:
+\begin{equation}
+    \min_{\mathbf{w}, b, \boldsymbol{\xi}} \frac{1}{2}\|\mathbf{w}\|_2^2 + C \sum_{n=1}^{N} \xi_n
+\end{equation}
+Trong đó, $C > 0$ là tham số điều chuẩn (\textit{regularization parameter}) đóng vai trò cân bằng giữa hai mục tiêu đối lập:
+\begin{enumerate}
+    \item \textbf{Tối đa hóa lề:} Giúp mô hình đơn giản hơn và tổng quát hóa tốt hơn (tránh Overfitting).
+    \item \textbf{Cực tiểu hóa sai số:} Đảm bảo mô hình phân loại đúng càng nhiều điểm trên tập huấn luyện càng tốt.
+\end{enumerate}
+
+Nếu chọn $C$ rất lớn, mô hình sẽ ưu tiên việc phân loại đúng (tiến về Hard Margin). Nếu chọn $C$ nhỏ, mô hình chấp nhận nhiều lỗi hơn để đổi lấy một đường biên phân cách rộng và mượt mà hơn.
+
+\subsubsection{Bài toán đối ngẫu Lagrange}
+
+\textbf{Điều kiện Slater:} 
+Tương tự bài toán SVM truyền thống, ở đây điều kiện slater cũng được thỏa mãn
+
+Hàm Lagrangian cho bài toán tối ưu trên được xác định bởi:
+\begin{equation}
+L(w, b, \epsilon, \lambda, \mu) = \frac{1}{2}\|w\|_2^2 + C\sum_{n=1}^N \epsilon_n + \sum_{n=1}^N \lambda_n(1 - \epsilon_n - y_n(w^T x_n + b)) - \sum_{n=1}^N \mu_n \epsilon_n \label{eq:lagrangian}
+\end{equation}
+Trong đó $\lambda = (\lambda_1, \lambda_2, \dots, \lambda_N)^T \succeq 0$ và $\mu = (\mu_1, \mu_2, \dots, \mu_N)^T \succeq 0$ là các biến đối ngẫu Lagrange.
+
+Để tìm cực trị, ta thiết lập đạo hàm riêng của $L$ theo các biến gốc bằng 0:
+\begin{align}
+\nabla_w L = 0 &\iff w = \sum_{n=1}^N \lambda_n y_n x_n \label{eq:diff_w} \\
+\frac{\partial L}{\partial b} = 0 &\iff \sum_{n=1}^N \lambda_n y_n = 0 \label{eq:diff_b} \\
+\frac{\partial L}{\partial \epsilon_n} = 0 &\iff \lambda_n = C - \mu_n, \quad \forall n=1,\dots,N \label{eq:diff_eps}
+\end{align}
+
+Từ (2.32), kết hợp với điều kiện $\lambda_n \geq 0$ và $\mu_n \geq 0$, ta suy ra hệ quả quan trọng: $0 \leq \lambda_n \leq C$.
+
+Thay các biểu thức (2.30), (2.31), và (2.32) vào hàm Lagrangian (2.29), ta thu được bài toán đối ngẫu:
+\begin{equation}
+\lambda = \arg \max_{\lambda} \left( \sum_{n=1}^N \lambda_n - \frac{1}{2}\sum_{n=1}^N \sum_{m=1}^N \lambda_n \lambda_m y_n y_m x_n^T x_m \right)
+\end{equation}
+với các điều kiện ràng buộc:
+\begin{equation*}
+\sum_{n=1}^N \lambda_n y_n = 0 \quad \text{và} \quad 0 \leq \lambda_n \leq C, \forall n = 1, \dots, N
+\end{equation*}
+
+\textbf{Hệ điều kiện KKT (Karush-Kuhn-Tucker):}
+\begin{align}
+1 - \epsilon_n - y_n(w^T x_n + b) \leq 0 \label{kkt:1} \\
+-\epsilon_n \leq 0, \quad \lambda_n \geq 0, \quad \mu_n \geq 0 \label{kkt:2} \\
+\lambda_n(1 - \epsilon_n - y_n(w^T x_n + b)) = 0 \label{kkt:3} \\
+\mu_n \epsilon_n = 0 \label{kkt:4}
+\end{align}
+
+---
+
+\textbf{Phân tích vị trí các điểm dữ liệu:}
+
+Dựa trên hệ điều kiện trên, ta xét các trường hợp của $\lambda_n$:
+
+\begin{itemize}
+    \item \textbf{Trường hợp 1:} Nếu $\lambda_n = 0$. Từ (2.32) suy ra $\mu_n = C > 0$. Kết hợp với (2.37) ta có $\epsilon_n = 0$. Thay vào (2.34), ta thu được $y_n(w^T x_n + b) \geq 1$. 
+    $\implies$ Điểm $x_n$ nằm trong \textbf{vùng an toàn} (đúng phía và ngoài lề).
+
+    \item \textbf{Trường hợp 2:} Nếu $0 < \lambda_n < C$. Từ (2.32) suy ra $\mu_n = C - \lambda_n > 0$, dẫn đến $\epsilon_n = 0$ theo (2.37). Vì $\lambda_n > 0$, từ (2.36) ta có $1 - 0 - y_n(w^T x_n + b) = 0 \iff y_n(w^T x_n + b) = 1$. 
+    $\implies$ Điểm $x_n$ nằm \textbf{chính xác trên đường margin}.
+
+    \item \textbf{Trường hợp 3:} Nếu $\lambda_n = C$. Từ (2.32) suy ra $\mu_n = 0$. Khi đó $\epsilon_n$ có thể nhận giá trị không âm bất kỳ. Từ (2.36), ta có $y_n(w^T x_n + b) = 1 - \epsilon_n$.
+    \begin{itemize}
+        \item Nếu $0 < \epsilon_n \leq 1$: $x_n$ nằm giữa đường biên và margin nhưng vẫn phân lớp đúng.
+        \item Nếu $\epsilon_n > 1$: $x_n$ bị phân lớp sai.
+    \end{itemize}
+    $\implies$ Điểm $x_n$ là điểm vi phạm margin (nhiễu).
+\end{itemize}
+
+Những điểm ứng với $0 < \lambda_n \leq C$ được gọi là các \textbf{Support Vectors}. Ta có các tập hợp chỉ số sau:
+\begin{itemize}
+    \item $S = \{n: 0 < \lambda_n \leq C\}$: Tập các Support Vectors.
+    \item $M = \{n: 0 < \lambda_n < C\}$: Tập các điểm nằm chính xác trên margin.
+\end{itemize}
+
+\textbf{Xác định tham số tối ưu:}
+\begin{equation}
+w = \sum_{n \in S} \lambda_n y_n x_n
+\end{equation}
+Với mỗi $n \in M$, ta có $y_n(w^T x_n + b) = 1$. Để ổn định số học, ta tính trung bình cộng $b$ trên toàn bộ tập $M$:
+\begin{equation}
+b = \frac{1}{|M|} \sum_{n \in M} (y_n - w^T x_n)
+\end{equation}
+
+\subsection{Kernel Support Vector Machine}
+
+Kernel Support Vector Machine (KSVM) là một mở rộng mạnh mẽ của phương pháp SVM truyền thống, được ứng dụng phổ biến trong các bài toán phân loại phức tạp như nhận dạng chữ số viết tay. Phương pháp này giải quyết vấn đề khi dữ liệu ban đầu không thể phân tách tuyến tính.
+
+\subsubsection{Ý tưởng về ánh xạ không gian (Feature Mapping)}
+
+Xét một tập dữ liệu trong không gian 2 chiều mà tại đó không tồn tại bất kỳ siêu phẳng (đường thẳng) nào có thể chia cắt các điểm dữ liệu thuộc hai lớp khác nhau (ví dụ: xanh và đỏ). 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Hinh_ve/ksvm1.png}
+    \caption{Dữ liệu phi tuyến tính trong không gian 2 chiều.}
+\end{figure}
+
+Tuy nhiên, qua quan sát, nếu các điểm thuộc một lớp tập trung gần gốc tọa độ hơn lớp còn lại, ta có thể vẽ một đường tròn bao quanh để phân tách chúng. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Hinh_ve/ksvm3.png}
+    \caption{Đường tròn bao quanh bộ dữ liệu màu xanh}
+\end{figure}
+
+Thay vì cố gắng tìm một đường cong phức tạp trong không gian 2 chiều, người ta thực hiện ánh xạ dữ liệu sang không gian 3 chiều bằng cách thêm một thành phần $z$ như sau:
+\begin{equation}
+    z = (x^{(1)})^2 + (x^{(2)})^2
+\end{equation}
+Trong đó, $x^{(1)}$ và $x^{(2)}$ lần lượt là các thành phần tọa độ của vector dữ liệu $\mathbf{x}$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Hinh_ve/ksvm2.png}
+    \caption{Dữ liệu được ánh xạ sang không gian 3 chiều.}
+\end{figure}
+
+Khi đó, trong không gian mới, ta có thể dễ dàng xác định được một siêu phẳng chia cắt hoàn hảo hai tập dữ liệu. Kỹ thuật biến đổi dữ liệu từ không gian ban đầu sang không gian mới nhiều chiều hơn được gọi là \textbf{Kernel SVM}. Hàm biến đổi $\Phi(\mathbf{x})$ tổng quát được gọi là \textit{feature mapping}, và hàm tính toán tích vô hướng trong không gian mới $K(\mathbf{x}, \mathbf{z}) = \Phi(\mathbf{x})^T \Phi(\mathbf{z})$ được gọi là \textbf{Kernel}.
+
+\subsubsection{Ví dụ về hàm Kernel}
+
+Một trong những hàm Kernel đơn giản và phổ biến nhất là \textbf{Polynomial Kernel} (Kernel đa thức). Với bậc $d=2$ trong không gian 2 chiều, hàm Kernel có dạng:
+\begin{equation}
+    K(\mathbf{x}, \mathbf{z}) = (\mathbf{x}^T \mathbf{z} + c)^2
+\end{equation}
+Hàm này tương ứng với việc ánh xạ dữ liệu vào không gian có các thành phần như $(x^{(1)})^2, (x^{(2)})^2, \sqrt{2}x^{(1)}x^{(2)}, \dots$, giúp mô hình có thể tạo ra các đường biên phân loại dạng bậc hai (như hình tròn, ellipse, hay parabola) trong không gian gốc.
+
+\subsubsection{Bài toán tối ưu với Kernel Support Vector Machine}
+
+Để xây dựng mô hình Kernel SVM, trước hết ta hãy nhắc lại bài toán đối ngẫu trong Soft Margin SVM tại không gian đặc trưng ban đầu:
+\begin{equation}
+    \lambda = \arg \max_{\lambda} \left( \sum_{n=1}^N \lambda_n - \frac{1}{2}\sum_{n=1}^N \sum_{m=1}^N \lambda_n \lambda_m y_n y_m \mathbf{x}_n^T \mathbf{x}_m \right)
+\end{equation}
+với điều kiện: $\sum_{n=1}^N \lambda_n y_n = 0$ và $0 \leq \lambda_n \leq C, \forall n = 1, \dots, N$.
+
+Khi áp dụng kỹ thuật ánh xạ dữ liệu vào không gian mới thông qua hàm $\Phi(\mathbf{x})$, mọi vector dữ liệu $\mathbf{x}$ sẽ được thay thế bằng $\Phi(\mathbf{x})$. Bài toán đối ngẫu lúc này trở thành:
+\begin{equation}
+    \lambda = \arg \max_{\lambda} \left( \sum_{n=1}^N \lambda_n - \frac{1}{2}\sum_{n=1}^N \sum_{m=1}^N \lambda_n \lambda_m y_n y_m \Phi(\mathbf{x}_n)^T \Phi(\mathbf{x}_m) \right) \label{eq:dual_phi}
+\end{equation}
+
+Việc xác định nhãn của một điểm dữ liệu mới $\mathbf{x}$ dựa trên dấu của biểu thức:
+\begin{equation}
+    f(\mathbf{x}) = \mathbf{w}^T \Phi(\mathbf{x}) + b = \sum_{m \in S} \lambda_m y_m \Phi(\mathbf{x}_m)^T \Phi(\mathbf{x}) + b \label{eq:predict_phi}
+\end{equation}
+Trong đó $S$ là tập hợp các chỉ số của các Support Vectors, và tham số $b$ được tính dựa trên một điểm $n \in M$ (điểm nằm chính xác trên margin):
+\begin{equation}
+    b = y_n - \sum_{m \in S} \lambda_m y_m \Phi(\mathbf{x}_m)^T \Phi(\mathbf{x}_n)
+\end{equation}
+
+\paragraph{Kỹ thuật Kernel (The Kernel Trick):}
+Trong thực tế, việc tính toán trực tiếp $\Phi(\mathbf{x})$ có thể gặp hai trở ngại lớn:
+\begin{enumerate}
+    \item \textbf{Chi phí tính toán:} Hàm $\Phi$ có thể ánh xạ dữ liệu vào không gian có số chiều rất lớn (thậm chí là vô hạn như Kernel RBF).
+    \item \textbf{Bộ nhớ:} Việc lưu trữ các vector $\Phi(\mathbf{x})$ trong không gian cao chiều cực kỳ tốn kém bộ nhớ.
+\end{enumerate}
+
+Tuy nhiên, quan sát phương trình (2.44) và (2.45), ta nhận thấy dữ liệu chỉ xuất hiện dưới dạng tích vô hướng của hai vector trong không gian mới: $\Phi(\mathbf{x})^T \Phi(\mathbf{z})$. Điều này dẫn đến định nghĩa của hàm Kernel:
+\begin{equation}
+    K(\mathbf{x}, \mathbf{z}) = \Phi(\mathbf{x})^T \Phi(\mathbf{z})
+\end{equation}
+Hàm Kernel cho phép ta tính trực tiếp giá trị tích vô hướng trong không gian cao chiều mà không cần thực hiện bước ánh xạ trung gian hay biết cụ thể dạng tường minh của $\Phi(\mathbf{x})$.
+
+\paragraph{Ta phát biểu lại bài toán tối ưu với Kernel như sau:}
+\begin{equation}
+    \lambda = \arg \max_{\lambda} \left( \sum_{n=1}^N \lambda_n - \frac{1}{2}\sum_{n=1}^N \sum_{m=1}^N \lambda_n \lambda_m y_n y_m K(\mathbf{x}_n, \mathbf{x}_m) \right)
+\end{equation}
+với các điều kiện ràng buộc giữ nguyên. Công thức xác định nhãn cho dữ liệu mới cũng được viết lại gọn nhẹ như sau:
+\begin{equation}
+    y_{new} = \text{sgn} \left( \sum_{m \in S} \lambda_m y_m K(\mathbf{x}_m, \mathbf{x}) + b \right)
+\end{equation}
+với $b = \frac{1}{|M|} \sum_{n \in M} \left( y_n - \sum_{m \in S} \lambda_m y_m K(\mathbf{x}_m, \mathbf{x}_n) \right)$.
+
+\section{Convolutional Neural Network (CNN)}
+
+\subsection{Mạng nơ-ron truyền thống (Fully Connected Network)}
+
+Trước khi đi sâu vào kiến trúc CNN, ta hãy xem xét mô hình mạng nơ-ron truyền thống, nơi mỗi nơ-ron ở tầng này kết nối với toàn bộ nơ-ron ở tầng kế tiếp (Fully Connected Layer).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Hinh_ve/neural_network.png}
+    \caption{Mô hình mạng nơ-ron truyền thống với các tầng liên kết đầy đủ.}
+\end{figure}
+
+Tuy nhiên, đối với dữ liệu hình ảnh, mạng liên kết đầy đủ bộc lộ những hạn chế lớn:
+\begin{itemize}
+    \item \textbf{Sự bùng nổ tham số:} Xét một ảnh đầu vào kích thước $64 \times 64$ pixel (tương đương 4096 điểm ảnh). Nếu tầng ẩn đầu tiên chỉ có 1000 nơ-ron, số lượng tham số cần huấn luyện đã lên tới $4096 \times 1000 \approx 4.1$ triệu tham số. Với ảnh màu hoặc mạng nhiều tầng, con số này sẽ cực kỳ lớn, dẫn đến hiện tượng quá khớp (overfitting) và chi phí tính toán khổng lồ.
+    \item \textbf{Mất thông tin không gian:} Mạng truyền thống yêu cầu "phẳng hóa" (flatten) ảnh thành một vector dài, điều này làm mất đi mối tương quan giữa các pixel lân cận — vốn là thông tin quan trọng nhất để nhận diện hình khối và kết cấu.
+\end{itemize}
+
+\subsection{Mạng nơ-ron tích chập (CNN)}
+
+CNN ra đời để giải quyết các nhược điểm trên bằng cách sử dụng các kết nối cục bộ và chia sẻ trọng số.
+
+\subsubsection{Kernel và Bias}
+
+Trong bài toán MNIST, ảnh đầu vào thường được chuẩn hóa về dạng ma trận $64 \times 64$. Thay vì kết nối mọi pixel, CNN sử dụng các bộ lọc (Kernel).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Hinh_ve/cnn.png}
+    \caption{Quá trình trượt Kernel trên ảnh đầu vào để trích xuất đặc trưng.}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Kernel:} Là một ma trận trọng số nhỏ (thường là $3 \times 3$ hoặc $5 \times 5$). Kernel sẽ trượt tuần tự trên ảnh đầu vào, thực hiện phép nhân chập (convolution) với từng vùng dữ liệu con. 
+    \item \textbf{Tính toán:} Tại mỗi vị trí, kết quả là tổng tích các phần tử tương ứng, sau đó cộng thêm một giá trị độ chệch (\textit{bias}):
+    \begin{equation}
+        O_{i,j} = \sum_{m} \sum_{n} (I_{i+m, j+n} \cdot K_{m,n}) + b
+    \end{equation}
+    Trong đó $I$ là ma trận đầu vào, $K$ là Kernel và $b$ là bias. 
+\end{itemize}
+
+Kết quả của quá trình này tạo ra một ma trận mới gọi là \textbf{Feature Map}, đại diện cho các đặc trưng như cạnh, góc hoặc vân bề mặt của ảnh.
+
+\subsubsection{Hàm kích hoạt (Activation Function)}
+
+Sau phép tính tích chập, các giá trị đầu ra thường được đưa qua một hàm kích hoạt phi tuyến để mô hình có thể học được các quy luật phức tạp. Trong các kiến trúc CNN hiện đại, hàm **ReLU (Rectified Linear Unit)** là lựa chọn phổ biến nhất.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Hinh_ve/ReLu.png}
+    \caption{Đồ thị hàm kích hoạt ReLU.}
+\end{figure}
+
+Công thức của hàm ReLU rất đơn giản:
+\begin{equation}
+    f(x) = \max(0, x)
+\end{equation}
+
+Việc sử dụng ReLU giúp loại bỏ các giá trị âm (vốn không mang lại ý nghĩa đóng góp cho đặc trưng được trích xuất), đồng thời giúp mạng hội tụ nhanh hơn và giảm thiểu hiện tượng triệt tiêu đạo hàm (vanishing gradient) so với các hàm như Sigmoid hay Tanh.
+
+\subsubsection{Lớp lấy mẫu cực đại (Max Pooling)}
+
+Sau tầng tích chập, ta thường sử dụng tầng Pooling để giảm kích thước không gian của biểu diễn (giảm số lượng tham số) nhưng vẫn giữ lại được những đặc trưng quan trọng nhất. Phổ biến nhất là **Max Pooling** với kích thước cửa sổ $2 \times 2$ và bước nhảy (\textit{stride}) bằng 2.
+
+\begin{itemize}
+    \item \textbf{Khái niệm Stride:} Stride là độ dời của cửa sổ trượt sau mỗi lần tính toán. Ví dụ, với $stride = 2$, sau khi tính toán tại một vùng, cửa sổ sẽ nhảy cách sang bên phải (hoặc xuống dưới) 2 pixel thay vì 1. Điều này giúp giảm đáng kể kích thước của ma trận đầu ra.
+    \item \textbf{Cơ chế hoạt động:} Khi cửa sổ trượt qua ma trận đặc trưng, nó chỉ trích xuất giá trị lớn nhất trong vùng đó. 
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Hinh_ve/max_pooling.png}
+    \caption{Minh họa cơ chế Max Pooling giúp giảm chiều dữ liệu.}
+\end{figure}
+
+Việc chỉ giữ lại giá trị cực đại giúp mạng nơ-ron có khả năng "bất biến đối với các dịch chuyển nhỏ" (translation invariance), đồng thời giúp mô hình tập trung vào những đặc trưng mạnh nhất đã tìm được.
+
+\subsubsection{Lớp kết nối đầy đủ (Fully Connected Layer - FC)}
+
+Sau khi dữ liệu đã đi qua nhiều lớp tích chập và pooling để trích xuất các đặc trưng cấp cao, ta cần một cơ chế để tổng hợp các thông tin này lại phục vụ cho việc phân loại.
+
+\begin{itemize}
+    \item \textbf{Quá trình làm phẳng (Flattening):} Dữ liệu từ dạng ma trận 2D hoặc tensor 3D sẽ được trải phẳng thành một vector 1D duy nhất.
+    \item \textbf{Vai trò:} Tầng FC hoạt động tương tự như một mạng nơ-ron truyền thống. Tại đây, mọi nơ-ron của tầng trước được kết nối với mọi nơ-ron của tầng sau. Nó đóng vai trò như một bộ phân loại cuối cùng, kết hợp các đặc trưng cục bộ đã được học để đưa ra quyết định tổng thể về đối tượng trong ảnh.
+\end{itemize}
+
+\subsubsection{Hàm mục tiêu và Phân loại (Loss Function)}
+
+Giả sử lớp đầu ra cuối cùng của mạng là vector $\mathbf{z} = (z_1, z_2, \dots, z_n)$, trong đó $n$ là số lượng lớp cần phân loại (với MNIST là 10 lớp từ 0 đến 9). Các giá trị này (logits) có thể là số thực bất kỳ.
+
+Để chuyển đổi các giá trị này thành xác suất có ý nghĩa (nằm trong đoạn $[0, 1]$ và tổng bằng 1), ta sử dụng hàm **Softmax**:
+\begin{equation}
+    \hat{y}_i = \frac{e^{z_i}}{\sum_{j=1}^n e^{z_j}}
+\end{equation}
+
+\paragraph{Hàm mất mát Cross-Entropy (Cross-Entropy Loss):}
+Trong quá trình huấn luyện, ta cần một thước đo để biết dự đoán của mạng ($\hat{y}$) đang cách xa nhãn thực tế ($y$) bao nhiêu. Hàm mất mát Cross-Entropy thường được ưu tiên sử dụng cho bài toán phân loại vì nó giúp quá trình tối ưu diễn ra nhanh hơn so với hàm lỗi bình phương trung bình (MSE).
+
+\begin{equation}
+    L = -\sum_{i=1}^n y_i \log(\hat{y}_i)
+\end{equation}
+
+[Image of Softmax and Cross-Entropy loss visualization]
+
+\paragraph{Ý nghĩa của hàm Loss:}
+Giả sử một hình ảnh có nhãn thực tế là lớp $i$ (tức $y_i = 1$ và các $y_j = 0$ với $j \neq i$). 
+\begin{itemize}
+    \item Nếu mạng dự đoán chính xác ($\hat{y}_i$ tiến gần đến 1), giá trị $-\log(\hat{y}_i)$ sẽ rất nhỏ, tiệm cận về 0.
+    \item Ngược lại, nếu mạng dự đoán sai ($\hat{y}_i$ tiến gần về 0), giá trị $-\log(\hat{y}_i)$ sẽ tiến tới dương vô cùng.
+\end{itemize}
+Mục tiêu của việc huấn luyện là tối thiểu hóa hàm $L$. Khi $L$ nhỏ nhất, xác suất dự đoán tại lớp đúng sẽ đạt cực đại, đồng nghĩa với việc mạng nơ-ron đã học được cách phân loại chính xác dữ liệu đầu vào.
+
+\subsubsection{Lan truyền ngược (Backpropagation)}
+
+Mục tiêu tối thượng của quá trình huấn luyện mạng nơ-ron là tìm ra bộ tham số tối ưu cho các bộ lọc (Kernel $K$) và độ chệch (Bias $b$) tại mọi tầng, sao cho hàm mất mát $L$ đạt giá trị nhỏ nhất.
+
+\paragraph{Quá trình khởi tạo và Lan truyền tiến:}
+Ban đầu, các tham số trong mạng (trọng số của các Kernel và các Bias) được khởi tạo một cách ngẫu nhiên. Khi một dữ liệu đầu vào $\mathbf{x}$ đi qua mạng, nó trải qua một chuỗi các phép biến đổi phi tuyến thông qua $n$ tầng ($f_1, f_2, \dots, f_n$):
+\begin{equation}
+    \hat{y} = f_n(f_{n-1}(\dots f_1(\mathbf{x}; K, b) \dots))
+\end{equation}
+Sau bước này, ta tính được giá trị mất mát $L$ dựa trên sự sai khác giữa $\hat{y}$ và nhãn thực tế $y$.
+
+\paragraph{Giải thuật Lan truyền ngược và Quy tắc chuỗi (Chain Rule):}
+Để cập nhật các tham số, ta cần biết mức độ ảnh hưởng của từng tham số đối với lỗi tổng thể. Điều này được thực hiện bằng cách tính đạo hàm riêng của hàm mất mát $L$ theo từng tham số $K$ và $b$ thông qua quy tắc chuỗi:
+
+\begin{itemize}
+    \item \textbf{Đối với Kernel ($K$):}
+    \begin{equation}
+        \frac{\partial L}{\partial K} = \frac{\partial L}{\partial f_n} \cdot \frac{\partial f_n}{\partial f_{n-1}} \cdot \dots \cdot \frac{\partial f_1}{\partial K}
+    \end{equation}
+    \item \textbf{Đối với Bias ($b$):}
+    \begin{equation}
+        \frac{\partial L}{\partial b} = \frac{\partial L}{\partial f_n} \cdot \frac{\partial f_n}{\partial f_{n-1}} \cdot \dots \cdot \frac{\partial f_1}{\partial b}
+    \end{equation}
+\end{itemize}
+
+Ý nghĩa của các biểu thức này là ta đang lan truyền sai số từ tầng cuối cùng ngược trở lại tầng đầu tiên. Mỗi tầng sẽ nhận một phần "trách nhiệm" cho lỗi dự đoán, từ đó xác định hướng cần thay đổi các tham số.
+
+
+
+\paragraph{Cập nhật tham số (Gradient Descent):}
+Sau khi tính được các đạo hàm (gradient), các tham số sẽ được cập nhật theo hướng làm giảm hàm mất mát:
+\begin{align}
+    K_{new} &= K_{old} - \eta \cdot \frac{\partial L}{\partial K} \\
+    b_{new} &= b_{old} - \eta \cdot \frac{\partial L}{\partial b}
+\end{align}
+Trong đó $\eta$ (Learning Rate) là tốc độ học, điều chỉnh mức độ thay đổi của tham số sau mỗi bước lặp. Quá trình Lan truyền tiến và Lan truyền ngược này được lặp đi lặp lại hàng nghìn lần trên toàn bộ tập dữ liệu (Epochs) cho đến khi mô hình hội tụ và đạt được độ chính xác mong muốn.
+
+\end{document}
