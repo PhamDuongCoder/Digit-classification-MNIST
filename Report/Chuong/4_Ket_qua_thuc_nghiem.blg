@@ -1,0 +1,5 @@
+[1] Config.pm:328> INFO - This is Biber 2.21
+[2] Config.pm:331> INFO - Logfile is 'Chuong/4_Ket_qua_thuc_nghiem.blg'
+[297] biber-MSWIN64:342> INFO - === 
+[1486] Utils.pm:479> ERROR - Cannot find 'Chuong/4_Ket_qua_thuc_nghiem.bcf'!
+[1486] Biber.pm:137> INFO - ERRORS: 1

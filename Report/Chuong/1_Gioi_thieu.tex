@@ -9,8 +9,15 @@
 Để giải quyết vấn đề này, ta đến với bài toán phân loại đa lớp. Trong học máy, đây là bài toán phân loại các mẫu dữ liệu vào một trong nhiều hơn hai lớp đối tượng, với nhiều hướng giải quyết, bao gồm các phương pháp thiên về học máy truyền thống, và các phương pháp thiên về học sâu. Với mục đích hiểu sâu hơn về cả học máy truyền thống và học sâu, em đã lựa chọn giải quyết bài toán bằng hai phương pháp: Support vector machine (SVM) và Convolutional neural network (CNN), lần lượt là các phương pháp được ứng dụng phổ biến trong học máy truyền thống và học sâu. Về bộ dữ liệu dành cho huấn luyện và kiểm tra, dataset MNIST, với 70000 ảnh chữ số viết tay đen trắng kích thước 24x24 pixel, là một lựa chọn phù hợp cho bài toán. 
 
 \section{Bố cục đồ án}
-\indent Trong chương 2, em sẽ trình bày các nền tảng lý thuyết cốt lõi liên quan đến bài toán phân loại đa lớp, và 2 phương pháp học máy SVM và CNN. Chương này sẽ làm rõ các khái niệm liên quan đến SVM, bao gồm bài toán tối ưu siêu phẳng chia cắt 2 bộ dữ liệu, soft margin support vector machine, và kernel support vector machine; và các khái niệm liên quan đến CNN, bao gồm mô hình neural network truyền thống, mô hình convolutional neural network, loss function, và backpropagation. \\
-\indent Tiếp nối các cơ sở lý thuyết, Chương 3 đi sâu vào quá trình thực nghiệm và đánh giá chi tiết hiệu năng của các mô hình trên bộ dữ liệu MNIST. Tại đây, quy trình tiền xử lý dữ liệu, thiết lập các tham số huấn luyện và kết quả thực nghiệm bao gồm độ chính xác, thời gian thực thi cùng ma trận nhầm lẫn sẽ được phân tích cụ thể để đưa ra cái nhìn khách quan về ưu điểm và hạn chế của từng phương pháp. \\
-\indent Cuối cùng, Chương 4 sẽ tổng kết lại những kết quả đạt được sau quá trình nghiên cứu, đồng thời đề xuất các hướng phát triển tiềm năng nhằm cải thiện độ chính xác và khả năng ứng dụng của mô hình trong thực tế.
 
-\end{document}
+Báo cáo được chia thành 6 chương như sau:
+
+Chương 2 trình bày cơ sở lý thuyết của hai phương pháp chính được sử dụng: Support Vector Machine (SVM) và Convolutional Neural Network (CNN), bao gồm các khái niệm, công thức toán học và nguyên lý hoạt động.
+
+Chương 3 mô tả quá trình áp dụng hai mô hình vào bài toán phân loại chữ số MNIST, từ tiền xử lý dữ liệu, thiết kế kiến trúc mạng, đến các tham số huấn luyện và triển khai code.
+
+Chương 4 trình bày kết quả thực nghiệm, bao gồm độ chính xác, thời gian huấn luyện, ma trận nhầm lẫn và phân tích sai số của cả hai mô hình, đồng thời so sánh hiệu năng giữa SVM và CNN.
+
+Chương 5 minh họa giao diện demo để kiểm tra mô hình trên các mẫu dữ liệu thực tế, cho thấy khả năng ứng dụng của hệ thống.
+
+Chương 6 tổng kết các kết quả đạt được.

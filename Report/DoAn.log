@@ -1,18 +1,13 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.22)  26 JAN 2026 10:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.22)  26 JAN 2026 12:13
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**c:/Users/LENOVO/Documents/GitHub/Digit-classification-MNIST/Report/Chuong/2_Co_so_ly_thuyet.tex
-(c:/Users/LENOVO/Documents/GitHub/Digit-classification-MNIST/Report/Chuong/2_Co_so_ly_thuyet.tex
+**c:/Users/LENOVO/Documents/GitHub/Digit-classification-MNIST/Report/DoAn.tex
+(c:/Users/LENOVO/Documents/GitHub/Digit-classification-MNIST/Report/DoAn.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-29>
-(C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/subfiles\subfiles.cls
-Document Class: subfiles 2020/11/14 v2.2 Multi-file projects (class)
-Preamble taken from file `../DoAn.tex'
-(C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/import\import.sty
-Package: import 2020/04/01  v 6.2
-) (c:\Users\LENOVO\Documents\GitHub\Digit-classification-MNIST\Report\DoAn.tex (C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/base\report.cls
+(C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/base\report.cls
 Document Class: report 2025/01/22 v1.4n Standard LaTeX document class
 (C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo
 File: size10.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
@@ -444,7 +439,9 @@ Package: enumitem 2025/02/06 v3.11 Customized lists
 \enitdp@description=\count305
 ) (C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/subfiles\subfiles.sty
 Package: subfiles 2020/11/14 v2.2 Multi-file projects (package)
-) (C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/titlesec\titlesec.sty
+ (C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/import\import.sty
+Package: import 2020/04/01  v 6.2
+)) (C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/titlesec\titlesec.sty
 Package: titlesec 2025/01/04 v2.17 Sectioning titles
 \ttl@box=\box60
 \beforetitleunit=\skip60
@@ -1089,7 +1086,7 @@ If that doesn't work, type  X <return>  to quit.
 
 )
 
-c:\Users\LENOVO\Documents\GitHub\Digit-classification-MNIST\Report\DoAn.tex:140: LaTeX Error: Unknown option `all' for package `hypcap'.
+c:/Users/LENOVO/Documents/GitHub/Digit-classification-MNIST/Report/DoAn.tex:140: LaTeX Error: Unknown option `all' for package `hypcap'.
 
 See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
@@ -1101,14 +1098,13 @@ The option `all' was not declared in package `hypcap', perhaps you
 misspelled its name. Try typing  <return>  to proceed.
 
 \c@example=\count507
-))
 
 Package biblatex Warning: 'babel/polyglossia' detected but 'csquotes' missing.
 (biblatex)                Loading 'csquotes' recommended.
 
 \@quotelevel=\count508
 \@quotereset=\count509
-LaTeX Font Info:    Trying to load font information for T5+ptm on input line 3.
+LaTeX Font Info:    Trying to load font information for T5+ptm on input line 161.
 (C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/vntex\t5ptm.fd
 File: t5utm.fd 2005/08/24 Fontinst v1.929 font definitions for T5/ptm.
 )
@@ -1116,25 +1112,25 @@ File: t5utm.fd 2005/08/24 Fontinst v1.929 font definitions for T5/ptm.
 LaTeX Warning: Unused global option(s):
     [13pt,3p].
 
-No file 2_Co_so_ly_thuyet.aux.
-\openout1 = `2_Co_so_ly_thuyet.aux'.
+No file DoAn.aux.
+\openout1 = `DoAn.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 3.
-LaTeX Font Info:    ... okay on input line 3.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 3.
-LaTeX Font Info:    ... okay on input line 3.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 3.
-LaTeX Font Info:    ... okay on input line 3.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 3.
-LaTeX Font Info:    ... okay on input line 3.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 3.
-LaTeX Font Info:    ... okay on input line 3.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 3.
-LaTeX Font Info:    ... okay on input line 3.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 3.
-LaTeX Font Info:    ... okay on input line 3.
-LaTeX Font Info:    Checking defaults for T5/cmr/m/n on input line 3.
-LaTeX Font Info:    ... okay on input line 3.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
+LaTeX Font Info:    Checking defaults for T5/cmr/m/n on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -1200,27 +1196,27 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: hypcap package is loaded.
 
-c:/Users/LENOVO/Documents/GitHub/Digit-classification-MNIST/Report/Chuong/2_Co_so_ly_thuyet.tex:3: Too many }'s.
+c:/Users/LENOVO/Documents/GitHub/Digit-classification-MNIST/Report/DoAn.tex:161: Too many }'s.
 <argument> ...t {\ifcapstart \caption@start@ \fi }
                                                   }\let \caption@start \rela...
-l.3 \begin{document}
-                    
+l.161 \begin{document}
+                      
 You've closed more groups than you opened.
 Such booboos are generally harmless, so keep going.
 
-c:/Users/LENOVO/Documents/GitHub/Digit-classification-MNIST/Report/Chuong/2_Co_so_ly_thuyet.tex:3: Too many }'s.
+c:/Users/LENOVO/Documents/GitHub/Digit-classification-MNIST/Report/DoAn.tex:161: Too many }'s.
 <argument> ... {\ifcapstart \caption@start@ \fi }}
                                                   \let \caption@start \relax...
-l.3 \begin{document}
-                    
+l.161 \begin{document}
+                      
 You've closed more groups than you opened.
 Such booboos are generally harmless, so keep going.
 
-c:/Users/LENOVO/Documents/GitHub/Digit-classification-MNIST/Report/Chuong/2_Co_so_ly_thuyet.tex:3: Extra \fi.
+c:/Users/LENOVO/Documents/GitHub/Digit-classification-MNIST/Report/DoAn.tex:161: Extra \fi.
 <argument> ...tion@hypcapspace {\hypcapspace }\fi 
                                                   
-l.3 \begin{document}
-                    
+l.161 \begin{document}
+                      
 I'm ignoring this; it doesn't match any \if.
 
 Package caption Info: listings package is loaded.
@@ -1231,71 +1227,115 @@ Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
 Package caption Info: supertabular package is loaded.
 Package caption Info: End \AtBeginDocument code.
 \c@lstlisting=\count516
-Package tocbasic Info: setting babel extension for `lol' on input line 3.
+Package tocbasic Info: setting babel extension for `lol' on input line 161.
 Package biblatex Info: Trying to load language 'nil'...
 Package biblatex Info: ... file 'nil.lbx' not found.
 
 
 Package biblatex Warning: Language 'nil' not supported.
-(biblatex)                Using dummy definitions on input line 3.
+(biblatex)                Using dummy definitions on input line 161.
 
 Package biblatex Info: Input encoding 'utf8' detected.
 Package biblatex Info: Automatic encoding selection.
 (biblatex)             Assuming data encoding 'utf8'.
-\openout4 = `2_Co_so_ly_thuyet.bcf'.
+\openout4 = `DoAn.bcf'.
 
 Package biblatex Info: Trying to load bibliographic data...
-Package biblatex Info: ... file '2_Co_so_ly_thuyet.bbl' found.
-(c:\Users\LENOVO\Documents\GitHub\Digit-classification-MNIST\Report\Chuong\2_Co_so_ly_thuyet.bbl)
-Package biblatex Info: Reference section=0 on input line 3.
-Package biblatex Info: Reference segment=0 on input line 3.
-<Hinh_ve/svm.png, id=1, 472.76625pt x 298.716pt>
-File: Hinh_ve/svm.png Graphic file (type png)
-<use Hinh_ve/svm.png>
-Package pdftex.def Info: Hinh_ve/svm.png  used on input line 15.
-(pdftex.def)             Requested size: 256.07741pt x 161.8056pt.
-LaTeX Font Info:    Calculating math sizes for size <13> on input line 25.
+Package biblatex Info: ... file 'DoAn.bbl' found.
+(DoAn.bbl)
+Package biblatex Info: Reference section=0 on input line 161.
+Package biblatex Info: Reference segment=0 on input line 161.
+ (Bia.tex
+LaTeX Font Info:    Calculating math sizes for size <13> on input line 42.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <6.5> not available
-(Font)              size <6> substituted on input line 25.
+(Font)              size <6> substituted on input line 42.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <13> not available
-(Font)              size <12> substituted on input line 25.
+(Font)              size <12> substituted on input line 42.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <6.5> not available
-(Font)              size <6> substituted on input line 25.
+(Font)              size <6> substituted on input line 42.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <13> not available
-(Font)              size <12> substituted on input line 25.
+(Font)              size <12> substituted on input line 42.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <6.5> not available
-(Font)              size <6> substituted on input line 25.
+(Font)              size <6> substituted on input line 42.
 
-LaTeX Font Info:    Trying to load font information for U+lasy on input line 25.
+LaTeX Font Info:    Trying to load font information for U+lasy on input line 42.
 (C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/base\ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
 
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <13> not available
-(Font)              size <12> substituted on input line 25.
+(Font)              size <12> substituted on input line 42.
 
 
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <6.5> not available
-(Font)              size <6> substituted on input line 25.
+(Font)              size <6> substituted on input line 42.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 25.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 42.
 (C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 25.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 42.
  (C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
+) [1
+
+{C:/Users/LENOVO/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/vntex/t5.enc}]) (Bia_lot.tex [1])
+Underfull \hbox (badness 10000) in paragraph at lines 201--205
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 207--210
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 212--215
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 217--220
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 222--225
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 227--228
+
+ []
+
+[1]
+Ch\uhorn \ohorn ng 1.
+(Chuong/1_Gioi_thieu.tex) [2
+
+]
+Ch\uhorn \ohorn ng 2.
+(Chuong/2_Co_so_ly_thuyet.tex
+<Hinh_ve/svm.png, id=16, 472.76625pt x 298.716pt>
+File: Hinh_ve/svm.png Graphic file (type png)
+<use Hinh_ve/svm.png>
+Package pdftex.def Info: Hinh_ve/svm.png  used on input line 15.
+(pdftex.def)             Requested size: 256.07741pt x 161.8056pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 20--22
+
+ []
+
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <13> not available
 (Font)              size <12> substituted on input line 25.
@@ -1309,6 +1349,14 @@ Overfull \hbox (3.53047pt too wide) in paragraph at lines 25--26
 []\T5/ptm/m/n/13 Gi£ sû tªp dú li»u hu§n luy»n bao gçm c¡c c°p dú li»u $\OT1/cmr/m/n/12 (\OT1/cmr/bx/n/12 x[]\OML/cmm/m/it/12 ; y[]\OT1/cmr/m/n/12 )$ \T5/ptm/m/n/13 vîi $\OML/cmm/m/it/12 n \OT1/cmr/m/n/12 = 1\OML/cmm/m/it/12 ; \OT1/cmr/m/n/12 2\OML/cmm/m/it/12 ; [] ; N$\T5/ptm/m/n/13 ,
  []
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 31--33
+
+ []
+
+[3
+
+ <./Hinh_ve/svm.png>]
 
 LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <13> not available
 (Font)              size <12> substituted on input line 38.
@@ -1337,72 +1385,257 @@ LaTeX Font Info:    Font shape `U/lasy/b/n' in size <6.5> not available
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <6.5> not available
 (Font)              size <6> substituted on input line 38.
 
-[1
-
-{C:/Users/LENOVO/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/vntex/t5.enc} <./Hinh_ve/svm.png>]
 LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 46.
- (C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1ptm.fd
+(C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
-Overfull \hbox (2.65857pt too wide) in paragraph at lines 63--64
+Underfull \hbox (badness 10000) in paragraph at lines 47--48
+
+ []
+
+
+Overfull \hbox (2.65857pt too wide) in paragraph at lines 61--62
 []\T5/ptm/b/n/13 T¼m $\OML/cmm/m/it/12 b$\T5/ptm/b/n/13 : \T5/ptm/m/n/13 Vîi b§t ký mët Support Vector $\OT1/cmr/bx/n/12 x[]$ \T5/ptm/m/n/13 ($\OML/cmm/m/it/12 k \OMS/cmsy/m/n/12 2 S$\T5/ptm/m/n/13 ), ta câ ph÷ìng tr¼nh $\OML/cmm/m/it/12 y[]\OT1/cmr/m/n/12 (\OT1/cmr/bx/n/12 w[]x[] \OT1/cmr/m/n/12 +
  []
 
-<Hinh_ve/ssvm1.png, id=18, 3613.5pt x 2409.0pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 64--66
+
+ []
+
+<Hinh_ve/ssvm1.png, id=30, 3613.5pt x 2409.0pt>
 File: Hinh_ve/ssvm1.png Graphic file (type png)
 <use Hinh_ve/ssvm1.png>
-Package pdftex.def Info: Hinh_ve/ssvm1.png  used on input line 77.
+Package pdftex.def Info: Hinh_ve/ssvm1.png  used on input line 75.
 (pdftex.def)             Requested size: 256.07741pt x 170.70569pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [2{C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}]
-<Hinh_ve/ssvm2.png, id=26, 3613.5pt x 2409.0pt>
+ [4{C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}]
+<Hinh_ve/ssvm2.png, id=38, 3613.5pt x 2409.0pt>
 File: Hinh_ve/ssvm2.png Graphic file (type png)
 <use Hinh_ve/ssvm2.png>
-Package pdftex.def Info: Hinh_ve/ssvm2.png  used on input line 84.
+Package pdftex.def Info: Hinh_ve/ssvm2.png  used on input line 82.
 (pdftex.def)             Requested size: 256.07741pt x 170.70569pt.
- [3 <./Hinh_ve/ssvm1.png> <./Hinh_ve/ssvm2.png>]
-<Hinh_ve/ksvm1.png, id=33, 449.2785pt x 445.9059pt>
-File: Hinh_ve/ksvm1.png Graphic file (type png)
-<use Hinh_ve/ksvm1.png>
-Package pdftex.def Info: Hinh_ve/ksvm1.png  used on input line 115.
-(pdftex.def)             Requested size: 213.39568pt x 211.7939pt.
-<Hinh_ve/ksvm2.png, id=34, 480.3546pt x 428.68155pt>
-File: Hinh_ve/ksvm2.png Graphic file (type png)
-<use Hinh_ve/ksvm2.png>
-Package pdftex.def Info: Hinh_ve/ksvm2.png  used on input line 121.
-(pdftex.def)             Requested size: 213.39568pt x 190.43889pt.
- [4 <./Hinh_ve/ksvm1.png> <./Hinh_ve/ksvm2.png>]
-<Hinh_ve/neural_network.png, id=40, 853.1875pt x 499.8675pt>
-File: Hinh_ve/neural_network.png Graphic file (type png)
-<use Hinh_ve/neural_network.png>
-Package pdftex.def Info: Hinh_ve/neural_network.png  used on input line 147.
-(pdftex.def)             Requested size: 298.75264pt x 175.03252pt.
-<Hinh_ve/cnn.png, id=41, 4553.01pt x 1707.37875pt>
-File: Hinh_ve/cnn.png Graphic file (type png)
-<use Hinh_ve/cnn.png>
-Package pdftex.def Info: Hinh_ve/cnn.png  used on input line 163.
-(pdftex.def)             Requested size: 341.43437pt x 128.02182pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [5 <./Hinh_ve/neural_network.png>]
-<Hinh_ve/max_pooling.png, id=46, 697.60625pt x 248.93pt>
+ [5 <./Hinh_ve/ssvm1.png> <./Hinh_ve/ssvm2.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 104--105
+
+ []
+
+<Hinh_ve/ksvm1.png, id=46, 449.2785pt x 445.9059pt>
+File: Hinh_ve/ksvm1.png Graphic file (type png)
+<use Hinh_ve/ksvm1.png>
+Package pdftex.def Info: Hinh_ve/ksvm1.png  used on input line 113.
+(pdftex.def)             Requested size: 213.39568pt x 169.46939pt.
+<Hinh_ve/ksvm2.png, id=48, 480.3546pt x 428.68155pt>
+File: Hinh_ve/ksvm2.png Graphic file (type png)
+<use Hinh_ve/ksvm2.png>
+Package pdftex.def Info: Hinh_ve/ksvm2.png  used on input line 119.
+(pdftex.def)             Requested size: 213.39568pt x 150.04115pt.
+
+Underfull \vbox (badness 3271) has occurred while \output is active []
+
+ [6 <./Hinh_ve/ksvm1.png> <./Hinh_ve/ksvm2.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 135--137
+
+ []
+
+<Hinh_ve/neural_network.png, id=57, 853.1875pt x 499.8675pt>
+File: Hinh_ve/neural_network.png Graphic file (type png)
+<use Hinh_ve/neural_network.png>
+Package pdftex.def Info: Hinh_ve/neural_network.png  used on input line 145.
+(pdftex.def)             Requested size: 298.75264pt x 175.03252pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 149--151
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 153--155
+
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [7 <./Hinh_ve/neural_network.png>]
+<Hinh_ve/cnn.png, id=62, 4553.01pt x 1707.37875pt>
+File: Hinh_ve/cnn.png Graphic file (type png)
+<use Hinh_ve/cnn.png>
+Package pdftex.def Info: Hinh_ve/cnn.png  used on input line 161.
+(pdftex.def)             Requested size: 341.43437pt x 128.02182pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 168--170
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 175--177
+
+ []
+
+<Hinh_ve/max_pooling.png, id=63, 697.60625pt x 248.93pt>
 File: Hinh_ve/max_pooling.png Graphic file (type png)
 <use Hinh_ve/max_pooling.png>
-Package pdftex.def Info: Hinh_ve/max_pooling.png  used on input line 185.
+Package pdftex.def Info: Hinh_ve/max_pooling.png  used on input line 183.
 (pdftex.def)             Requested size: 298.75264pt x 106.6048pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [6 <./Hinh_ve/cnn.png> <./Hinh_ve/max_pooling.png>]
+ [8 <./Hinh_ve/cnn.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 199--201
+
+ []
+
+) [9 <./Hinh_ve/max_pooling.png>]
+Ch\uhorn \ohorn ng 3.
+(Chuong/3_Ap_dung.tex
+Underfull \hbox (badness 10000) in paragraph at lines 7--8
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--26
+
+ []
+
+LaTeX Font Info:    Trying to load font information for T5+pcr on input line 30.
+(C:\Users\LENOVO\AppData\Local\Programs\MiKTeX\tex/latex/vntex\t5pcr.fd
+File: t5ucr.fd 2005/08/24 Fontinst v1.929 font definitions for T5/pcr.
+) [10
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 66--67
+
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [11]
+Overfull \hbox (43.41954pt too wide) in paragraph at lines 83--84
+[]\T5/ptm/b/n/13 L÷u trú mæ h¼nh: \T5/ptm/m/n/13 Mæ h¼nh ^^_¢ hu§n luy»n ^^_÷ñc l÷u v o file Results/svm_model.joblib. 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 91--92
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 108--109
+
+ []
+
+<Hinh_ve/sequential.png, id=81, 1189.44376pt x 493.845pt>
+File: Hinh_ve/sequential.png Graphic file (type png)
+<use Hinh_ve/sequential.png>
+Package pdftex.def Info: Hinh_ve/sequential.png  used on input line 115.
+(pdftex.def)             Requested size: 426.79135pt x 177.19629pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [12]
+Underfull \hbox (badness 10000) in paragraph at lines 147--148
+
+ []
+
+[13 <./Hinh_ve/sequential.png>]
+Overfull \hbox (18.8366pt too wide) in paragraph at lines 162--163
+\T5/ptm/m/n/13 Flatten, v  2 lîp Dense. Sû döng Optimizer Adam, Loss Categorical Crossentropy. 
+ []
+
+) [14]
+Ch\uhorn \ohorn ng 4.
+(Chuong/4_Ket_qua_thuc_nghiem.tex
+Underfull \hbox (badness 10000) in paragraph at lines 4--5
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 8--9
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--28
+
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [15
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 54--55
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 82--83
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 86--87
+
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [16]
+Underfull \hbox (badness 10000) in paragraph at lines 106--107
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 133--134
+
+ []
+
+[17]) [18]
+Ch\uhorn \ohorn ng 5.
+(Chuong/5_Demo.tex
+Underfull \hbox (badness 10000) in paragraph at lines 8--9
+
+ []
+
+<Chuong/../Hinh_ve/app1.png, id=105, 1444.64719pt x 768.62157pt>
+File: Chuong/../Hinh_ve/app1.png Graphic file (type png)
+<use Chuong/../Hinh_ve/app1.png>
+Package pdftex.def Info: Chuong/../Hinh_ve/app1.png  used on input line 16.
+(pdftex.def)             Requested size: 426.79135pt x 218.27686pt.
+<Chuong/../Hinh_ve/app2.png, id=107, 1444.64719pt x 766.36313pt>
+File: Chuong/../Hinh_ve/app2.png Graphic file (type png)
+<use Chuong/../Hinh_ve/app2.png>
+Package pdftex.def Info: Chuong/../Hinh_ve/app2.png  used on input line 25.
+(pdftex.def)             Requested size: 426.79135pt x 217.60028pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [19
+
+ <./Chuong/../Hinh_ve/app1.png>]) [20 <./Chuong/../Hinh_ve/app2.png>]
+Ch\uhorn \ohorn ng 6.
+(Chuong/6_Ket_luan.tex)
 
 Package glossaries Warning: No \printnoidxglossary or \printnoidxglossaries
  found. (Remove \makenoidxglossaries if you don't want any glossaries.)
 This document will not have a glossary.
 
-[7] (c:\Users\LENOVO\Documents\GitHub\Digit-classification-MNIST\Report\Chuong\2_Co_so_ly_thuyet.aux)
+[21
+
+] (DoAn.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-29>
@@ -1420,25 +1653,25 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
 
 Package biblatex Warning: Please (re)run Biber on the file:
-(biblatex)                2_Co_so_ly_thuyet
+(biblatex)                DoAn
 (biblatex)                and rerun LaTeX afterwards.
 
-Package logreq Info: Writing requests to '2_Co_so_ly_thuyet.run.xml'.
-\openout1 = `2_Co_so_ly_thuyet.run.xml'.
+Package logreq Info: Writing requests to 'DoAn.run.xml'.
+\openout1 = `DoAn.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 27605 strings out of 467871
- 540157 string characters out of 5417892
- 1480640 words of memory out of 5000000
- 56062 multiletter control sequences out of 15000+600000
- 653730 words of font info for 81 fonts, out of 8000000 for 9000
+ 27806 strings out of 467871
+ 543835 string characters out of 5417892
+ 1494205 words of memory out of 5000000
+ 56215 multiletter control sequences out of 15000+600000
+ 667219 words of font info for 100 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,8n,124p,2616b,459s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib9.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/urwvn/utmb8v.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/urwvn/utmr8v.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/urwvn/utmri8v.pfb>
-Output written on c:\Users\LENOVO\Documents\GitHub\Digit-classification-MNIST\Report\Chuong\2_Co_so_ly_thuyet.pdf (7 pages, 1172478 bytes).
+ 108i,12n,107p,2572b,573s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib9.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/urwvn/ucrr8v.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/urwvn/utmb8v.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/urwvn/utmr8v.pfb><C:/Users/LENOVO/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/urwvn/utmri8v.pfb>
+Output written on DoAn.pdf (23 pages, 1853730 bytes).
 PDF statistics:
- 129 PDF objects out of 1000 (max. 8388607)
+ 198 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 80 words of extra memory for PDF output out of 10000 (max. 10000000)
 

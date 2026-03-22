@@ -44,8 +44,7 @@
   <internal package="biblatex" priority="9" active="1">
     <generic>latex</generic>
     <provides type="dynamic">
-      <file>3_Ap_dung.aux</file>
-      <file>3_Ap_dung-blx.bib</file>
+      <file>3_Ap_dung.bcf</file>
     </provides>
     <requires type="dynamic">
       <file>3_Ap_dung.bbl</file>
@@ -53,7 +52,6 @@
     <requires type="static">
       <file>blx-dm.def</file>
       <file>blx-compat.def</file>
-      <file>blx-bibtex.def</file>
       <file>biblatex.def</file>
       <file>standard.bbx</file>
       <file>numeric.bbx</file>
@@ -65,14 +63,13 @@
     </requires>
   </internal>
   <external package="biblatex" priority="5" active="1">
-    <generic>bibtex</generic>
+    <generic>biber</generic>
     <cmdline>
-      <binary>bibtex</binary>
-      <option>-min-crossrefs 2</option>
+      <binary>biber</binary>
       <infile>3_Ap_dung</infile>
     </cmdline>
     <input>
-      <file>3_Ap_dung.aux</file>
+      <file>3_Ap_dung.bcf</file>
     </input>
     <output>
       <file>3_Ap_dung.bbl</file>
@@ -81,14 +78,10 @@
       <file>3_Ap_dung.bbl</file>
     </provides>
     <requires type="dynamic">
-      <file>3_Ap_dung.aux</file>
-      <file>3_Ap_dung-blx.bib</file>
+      <file>3_Ap_dung.bcf</file>
     </requires>
     <requires type="editable">
       <file>Danh_sach_tai_lieu_tham_khao.bib</file>
-    </requires>
-    <requires type="static">
-      <file>biblatex.bst</file>
     </requires>
   </external>
 </requests>

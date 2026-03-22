@@ -1,0 +1,57 @@
+\documentclass[../DoAn.tex]{subfiles}
+\begin{document}
+
+Chương này trình bày chi tiết quá trình thực nghiệm, bao gồm việc huấn luyện các mô hình SVM và CNN và kiểm tra hiệu suất của chúng trên tập dữ liệu MNIST.
+
+\section{Huấn luyện mô hình}
+
+Để tiến hành huấn luyện mô hình SVM hoặc CNN, chúng ta có thể sử dụng các hàm tương ứng là \texttt{run\_svm\_project} hoặc \texttt{run\_cnn\_project} được định nghĩa trong file \texttt{main.py}. Kết quả của quá trình huấn luyện sẽ được hiển thị trực tiếp trên terminal, cung cấp thông tin về độ chính xác và các chỉ số đánh giá khác.
+
+Hình 5.1 minh họa giao diện của file \texttt{main.py}, nơi người dùng có thể chọn và khởi chạy các hàm huấn luyện.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[trim={10pt 20pt 10pt 20pt}, clip,width=0.8\textwidth]{../Hinh_ve/giaodienmain.png}
+    \caption{Giao diện file main.py}
+    \label{fig:giaodienmain}
+\end{figure}
+
+Hình 5.2 và Hình 5.3 lần lượt hiển thị kết quả huấn luyện của mô hình SVM và CNN trên terminal.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[trim={10pt 20pt 10pt 20pt}, clip,width=0.8\textwidth]{../Hinh_ve/svmresult.png}
+    \caption{Kết quả huấn luyện mô hình SVM}
+    \label{fig:svmresult}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[trim={10pt 20pt 10pt 20pt}, clip,width=0.8\textwidth]{../Hinh_ve/cnnresult.png}
+    \caption{Kết quả huấn luyện mô hình CNN}
+    \label{fig:cnnresult}
+\end{figure}
+
+\section{Kiểm tra mô hình}
+
+Để đánh giá hiệu suất của hai mô hình, em đã thiết kế một giao diện ứng dụng cho phép lấy ngẫu nhiên các ảnh chữ số dựa trên nhãn được chọn trước để tiến hành kiểm tra.
+
+Hình 5.4 cho thấy cả hai mô hình AI đều nhận diện chính xác chữ số 3.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[trim={10pt 20pt 10pt 20pt}, clip,width=0.8\textwidth]{../Hinh_ve/app1.png}
+    \caption{Cả hai mô hình nhận diện đúng chữ số 3}
+    \label{fig:app1}
+\end{figure}
+
+Trong khi đó, Hình 5.5 minh họa trường hợp mô hình SVM nhận diện sai chữ số 7 thành số 2, nhưng mô hình CNN vẫn nhận diện chính xác.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../Hinh_ve/app2.png}
+    \caption{SVM nhận diện sai số 7 thành số 2, CNN nhận diện đúng}
+    \label{fig:app2}
+\end{figure}
+
+\end{document}
